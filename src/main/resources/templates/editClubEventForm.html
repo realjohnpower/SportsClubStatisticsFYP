@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+
+<body>
+<form th:action="@{/clubEvents/editClubEvent}" th:object="${clubEvent}" method="post">
+
+  <div>
+
+    <input type="hidden" id="eventID" name="eventID"  th:value="${clubEvent.getClubEventId()}" th:field="*{clubEventId}" />
+
+  </div>
+
+  <div>
+    <label for="eventName">Event Name:</label>
+    <input type="text" id="eventName" name="eventName"  th:value="${clubEvent.getClubEventName()}" th:field="*{clubEventName}" />
+
+  </div>
+
+
+  <div>
+    <label for="clubEventDescription">Event Description:</label>
+    <textarea id="clubEventDescription" name="clubEventDescription"  th:value="${clubEvent.getClubEventDescription()}"  th:field="*{clubEventDescription}" >
+    </textarea>
+
+  </div>
+
+  <div>
+    <label for="startDate">Start Date:</label>
+    <input type="datetime-local" id="startDate" name="startDate" th:value="${{clubEvent.getStartDate()}}" th:field="*{startDate}">
+
+  </div>
+
+
+
+  <div>
+    <label for="location">Location:</label>
+    <textarea id="location" name="clubEventDescription" th:value="${clubEvent.getLocation()}"   th:field="*{location}" >
+    </textarea>
+
+  </div>
+
+  <div>
+
+    <input type="hidden" id="eventAttendance" name="eventAttendance"  th:value="${clubEvent.getAttendanceList()}" th:field="*{attendanceList}" />
+
+  </div>
+
+
+  <div class="formButtons">
+    <button type="submit">Update Club Event</button>
+  </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

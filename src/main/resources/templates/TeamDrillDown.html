@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<h1 th:text="${team.getTeamName()}+' Details'" ></h1>
+
+<p><strong>Trainer:</strong> <span th:text="${team.getTrainer().getFirstName()}+' '+${team.getTrainer().getLastName()}"/><br></p>
+
+
+
+
+<h2> Team Members </h2>
+<div class="scroll-table">
+<table class="table table-hover" th:unless="${team.getTeamMembers().isEmpty()}">
+<thead>
+    <tr>
+
+
+        <th> Name</th>
+        <th>Email</th>
+
+
+
+    </tr>
+
+</thead>
+
+    <tr th:each="teamMembers: ${team.getTeamMembers()}">
+
+
+
+
+
+
+        <td   th:text="${teamMembers.getFirstName()}+' '+
+            ${teamMembers.getLastName()}"></td>
+
+        <td th:text="${teamMembers.getEmail()}"></td>
+
+        <td>
+            <a th:href="'/playerPhysicalStats/viewAllPlayerPhysicalStats/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
+                <button>
+                    View Physical Stats
+                </button>
+
+            </a>
+        </td>
+
+        <td>
+            <a th:href="'/playerPhysicalStats/playerPhysicalStatsForm/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
+
+
+                <button> Add Physical Stats </button>
+
+
+            </a>
+        </td>
+
+
+
+
+
+
+    </tr>
+
+
+</table>
+
+</div>
+
+<a th:href="'/teams/viewTeams'">Back To Teams </a>
+
+
+</body>
+</html>

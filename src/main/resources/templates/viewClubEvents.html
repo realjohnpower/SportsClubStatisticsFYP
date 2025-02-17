@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<h2> Club Events</h2>
+<div th:if="${message}" class="successMessage">
+  <p th:text="${message}"> </p>
+</div>
+
+
+
+<div class="centerButton">
+  <a th:href="@{'/clubEvents/addClubEventForm'}">
+    <button sec:authorize="hasRole('ADMIN')">Add A Club</button>
+  </a>
+</div>
+
+<h2 th:if="${clubEventList.isEmpty()}">
+  There is currently no Club Events.
+</h2>
+<div class="scroll-table">
+<table th:unless="${clubEventList.isEmpty()}" class="table table-hover">
+<thead>
+  <tr>
+
+
+    <th>Event Name</th>
+    <th>Event Description</th>
+    <th>Event Location</th>
+    <th>Start Date And Time</th>
+
+    <th>Going</th>
+    <th>Not Going</th>
+    <th sec:authorize="hasRole('ADMIN')"> Edit </th>
+    <th sec:authorize="hasRole('ADMIN')"> Remove </th>
+
+
+  </tr>
+
+</thead>
+  <tr th:each="clubEvent: ${clubEventList}">
+
+
+
+    <td>
+      <a th:href="'/clubEvents/clubEventDrillDown/'+${clubEvent.getClubEventId()}">
+        <span th:text="${clubEvent.getClubEventName()}"/>
+      </a>
+    </td>
+    <td th:text="${clubEvent.getClubEventDescription()}"></td>
+    <td th:text="${clubEvent.getLocation()}"></td>
+    <td th:text="${clubEvent.getStartDate()}"></td>
+
+
+
+
+
+
+    <td> <a th:href="'/clubEvents/goingToClubEvent/'+${clubEvent.getClubEventId()}+'/true'"> <button>Going</button></a> </td>
+    <td> <a th:href="'/clubEvents/goingToClubEvent/'+${clubEvent.getClubEventId()}+'/false'"> <button>Not Going</button></a> </td>
+    <td sec:authorize="hasRole('ADMIN')"> <a th:href="'/clubEvents/editClubEventForm/'+${clubEvent.getClubEventId()}"> <button>Edit</button></a> </td>
+    <td sec:authorize="hasRole('ADMIN')">
+      <a th:href="'/clubEvents/removeClubEvent/'+${clubEvent.getClubEventId()}" >
+      <button th:onclick="'return confirm(\'Are You Sure You Want To Delete This Club Event\');'">Remove</button></a> </td>
+  </tr>
+
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<form th:action="@{/clubEvents/addClubEvent}" th:object="${newClubEvent}" method="post">
+
+  <div>
+    <label for="eventName">Event Name:</label>
+    <input type="text" id="eventName" name="eventName"  th:field="*{clubEventName}" />
+
+  </div>
+
+
+  <div>
+    <label for="clubEventDescription">Event Description:</label>
+    <textarea id="clubEventDescription" name="clubEventDescription"    th:field="*{clubEventDescription}" >
+    </textarea>
+
+  </div>
+
+  <div>
+    <label for="startDate">Start Date:</label>
+    <input type="datetime-local" id="startDate" name="startDate" th:field="*{startDate}">
+
+  </div>
+
+
+
+  <div>
+    <label for="location">Location:</label>
+    <textarea id="location" name="clubEventDescription"    th:field="*{location}" >
+    </textarea>
+
+  </div>
+
+
+  <div class="formButtons">
+    <button type="submit">Add Club Event</button>
+  </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

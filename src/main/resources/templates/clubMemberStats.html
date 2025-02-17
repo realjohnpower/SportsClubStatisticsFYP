@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<script th:inline="javascript">
+
+    window.onload = function() {
+        // Get the values from Thymeleaf
+        var maleCount = [[${allMaleUsersCount}]];
+        var femaleCount = [[${allFemaleUsersCount}]];
+
+        // Call your gender chart function with the passed values
+        drawGenderChart(maleCount, femaleCount);
+
+
+
+        var data = [
+            {"ageGroup": "0-24", "Male": [[${malesBetween0to24}]], "Female": [[${femalesBetween0to24}]]},
+            {"ageGroup": "25-49", "Male": [[${malesBetween25to49}]], "Female": [[${femalesBetween25to49}]]},
+            {"ageGroup": "50-74", "Male": [[${malesBetween50to74}]], "Female": [[${femalesBetween50to74}]]},
+            {"ageGroup": "75-100", "Male": [[${malesBetween75to100}]], "Female": [[${femalesBetween75to100}]]}
+        ];
+        displayAgeGroupBarChart(data);
+        let usersRegisteredData= JSON.parse([[${listOfNewUsersPast6monthsJson}]])
+        displayUserRegisteredLineChart(usersRegisteredData);
+
+    };
+
+
+
+</script>
+<body>
+
+
+
+    <button th:onclick="updateGenderChart([[${allMaleUsersCount}]],[[${allFemaleUsersCount}]])">All Club Members</button>
+    <button th:onclick="updateGenderChart([[${allMaleTrainersCount}]],[[${allFemaleTrainersCount}]])">Trainers</button>
+    <button th:onclick="updateGenderChart([[${allMalePlayersCount}]],[[${allFemalePlayersCount}]])">Players</button>
+    <button th:onclick="updateGenderChart([[${allMaleAdminsCount}]],[[${allFemaleAdminsCount}]])">Admin</button>
+  <div class="chart-container">
+<div id="gender-barchart" class="chart"></div>
+
+<div id="gender-age-barchart" class="chart"></div>
+</div>
+
+<div id="user-registered-line-chart"></div>
+
+
+
+</body>
+</html>

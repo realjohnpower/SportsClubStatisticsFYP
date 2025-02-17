@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<script th:inline="javascript">
+
+    window.onload = function() {
+
+        let teamEventAttendanceStats=JSON.parse([[${teamEventAttendanceStats}]]);
+        console.log(teamEventAttendanceStats.attendingCount);
+        drawEventStatsBarChart(teamEventAttendanceStats);
+
+    };
+
+
+</script>
+
+<body>
+<h1 th:text="${teamEvent.getEventName()}+' Details'" ></h1>
+
+<p><strong>Event Description :</strong> <span th:text="${teamEvent.getEventDescription()}"/><br></p>
+<p><strong>Event Location :</strong> <span th:text="${teamEvent.getLocation()}"/><br></p>
+<p> <strong> Event Start Date: </strong> <span th:text="${teamEvent.getStartDate()}"/><br></p>
+
+
+<div class="grid-container">
+
+    <div class="left-table">
+<h2> Going: </h2>
+<div class="scroll-table">
+<table class="table table-hover" th:unless="${teamEvent.getAttendanceList().isEmpty()}">
+<thead>
+    <tr>
+
+
+        <th> Name</th>
+        <th>Email</th>
+
+
+
+    </tr>
+
+</thead>
+
+    <tr th:each="teamEventAttendance: ${teamEvent.getAttendanceList()}">
+
+
+
+
+
+        <td th:if="${teamEventAttendance.getAttendance()==true}"
+            th:text="${teamEventAttendance.getTeamMember().getFirstName()}+' '+
+            ${teamEventAttendance.getTeamMember().getLastName()}"></td>
+        <td th:if="${teamEventAttendance.getAttendance()==true}"
+            th:text="${teamEventAttendance.getTeamMember().getEmail()}"></td>
+
+
+
+
+
+
+
+    </tr>
+
+
+</table>
+</div>
+</div>
+    <div class="right-table">
+    <h2> Not Going: </h2>
+<div class="scroll-table">
+
+
+<table class="table table-hover" th:unless="${teamEvent.getAttendanceList().isEmpty()}">
+<thead>
+    <tr>
+
+
+        <th> Name</th>
+        <th>Email</th>
+
+
+
+    </tr>
+</thead>
+
+    <tr th:each="teamEventAttendance: ${teamEvent.getAttendanceList()}">
+
+
+
+
+
+        <td th:if="${teamEventAttendance.getAttendance()==false}"
+            th:text="${teamEventAttendance.getTeamMember().getFirstName()}+' '+
+            ${teamEventAttendance.getTeamMember().getLastName()}"></td>
+        <td th:if="${teamEventAttendance.getAttendance()==false}"
+            th:text="${teamEventAttendance.getTeamMember().getEmail()}"></td>
+
+
+
+
+
+
+
+    </tr>
+
+
+</table>
+
+
+</div>
+
+    </div>
+
+
+<div class="EventAttendance-barchart" style="width: 900px; height: 500px;"></div>
+</div>
+<a th:href="'/teamEvents/viewUsersTeamEvents'">Back To Team Events </a>
+
+
+</body>
+</html>

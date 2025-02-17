@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+<div th:fragment="navigation-header">
+
+        <meta charset="UTF-8">
+        <title>Sport Club</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://d3js.org/d3.v4.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="/assets/javascript/eventAttendanceBarChart.js"></script>
+        <script src="/assets/javascript/genderPieChart.js"></script>
+        <script src="/assets/javascript/genderAgeGroupBarChart.js"></script>
+        <script src="/assets/javascript/sixMonthUserRegisteredLineChart.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="/assets/css/style.css">
+
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" th:href="@{'/'}">Sport Club</a>
+            </div>
+            <ul class="nav navbar-nav">
+
+
+                <li sec:authorize="isAnonymous()"><a th:href="@{'/login'}">Log In </a></li>
+
+                <li sec:authorize="isAuthenticated()"><a th:href="@{'/clubEvents/viewClubEvents'}">Club Events</a></li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{'/user/registerMemberForm'}">Register A Club Member </a>
+                </li>
+
+
+                <li sec:authorize="hasRole('TRAINER')">
+                    <a th:href="@{'/teamEvents/addTeamEventForm'}">Add a Team Event </a>
+                </li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{'/teams/viewTeams'}">Manage Teams </a>
+                </li>
+
+                <li sec:authorize="hasRole( 'TRAINER')">
+                    <a th:href="@{'/teams/viewTrainerTeams'}">View Training Teams </a>
+                </li>
+
+                <li sec:authorize="hasRole( 'PLAYER')">
+                    <a th:href="@{'/teams/viewPlayerTeams'}">View Your Teams </a>
+                </li>
+
+
+
+
+                <li sec:authorize="hasAnyRole( 'PLAYER','TRAINER')">
+                    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">View Team Events </a>
+                </li>
+
+
+                <li sec:authorize="hasAnyRole( 'ADMIN')">
+                    <a th:href="@{'/user/generateClubMemberStats'}">View Club Member Stats </a>
+                </li>
+
+                <li sec:authorize="isAuthenticated()">
+                    <a th:onclick="'return confirm(\'Are You Sure You Want To Log Out?\');'"
+                       th:href="@{'/logout'}">Log Out </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</body>
+</div>
+</html>
