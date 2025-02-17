@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<form th:action="@{/teamEvents/addTeamEvent}" th:object="${newTeamEventForm}" method="post">
+
+    <div>
+        <label for="teamEventName">Team Event Name:</label>
+        <input type="text" id="teamEventName" name="teamEventName"  th:field="*{eventName}" />
+
+    </div>
+
+    <div>
+        <label for="teamEventName">Team Event Description:</label>
+        <input type="text" id="teamEventDescription" name="teamEventDescription"  th:field="*{eventDescription}" />
+
+    </div>
+
+    <div>
+        <label for="teamEventLocation">Team Event Location:</label>
+        <textarea id="teamEventLocation" name="teamEventLocation"  th:field="*{location}" ></textarea>
+
+    </div>
+
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input type="datetime-local" id="startDate" name="startDate" th:field="*{eventStartDate}">
+
+    </div>
+
+    <div>
+        <label for="team">Team:</label>
+        <select id="team" th:field="*{teamId}">
+            <option th:each="team:${listOfTeams}" th:value="${team.getTeam_Id()}" th:text="${team.getTeamName()}"></option>
+
+        </select>
+
+    </div>
+
+
+
+
+    <div class="formButtons">
+        <button type="submit">Add Team Event</button>
+    </div>
+</form>
+
+
+</body>
+</html>

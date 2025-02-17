@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+
+
+    <h2>Add Team Session Stats</h2>
+
+
+
+    <form th:action="@{/teamEvents/createTeamSessionStats}" th:object="${teamSessionStatsDTO}"  method="post" >
+        <div class="scroll-table">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+
+
+                <th>Name</th>
+                <th>Resting BPM</th>
+                <th>Avg BPM</th>
+                <th>Max BPM</th>
+                <th>Calories Burned</th>
+
+
+            </tr>
+            </thead>
+
+
+            <tr th:each="teamSessionStats, itemStat: *{teamSessionStats}">
+
+
+
+                <td th:text="${teamSessionStats.getPlayer().getFirstName()+' '+ teamSessionStats.getPlayer().getLastName()}"></td>
+
+
+
+
+
+                <td>
+
+                    <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].restingBpm}"/>
+                </td>
+
+                <td>
+
+                    <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].averageBpm}"/>
+                </td>
+
+                <td>
+
+                    <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].maxBpm}"/>
+                </td>
+
+                <td>
+
+                    <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].caloriesBurned}"/>
+                </td>
+
+
+
+                <td>
+                    <input type="hidden"  th:value="${teamSessionStats.getTeamSession().getTeamEventId()}" th:name="|teamSessionStats[${itemStat.index}].teamSession.teamEventId|"/>
+                </td>
+
+                <td>
+                    <input type="hidden"  th:value="${teamSessionStats.getPlayer().getUserId()}" th:name="|teamSessionStats[${itemStat.index}].player.userId|"/>
+                </td>
+            </tr>
+
+        </table>
+        </div>
+        <div class="formButtons">
+            <input type="submit" id="submitButton" value="Add Team Session Stats">
+        </div>
+    </form>
+
+
+</body>
+</html>

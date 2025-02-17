@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<form th:action="@{/teams/editTeam}" th:object="${editTeamForm}" method="post">
+
+    <div>
+
+        <input type="hidden" id="teamID" name="teamID"  th:value="${editTeamForm.getTeamId()}" th:field="*{teamId}" />
+
+    </div>
+
+
+    <div>
+        <label for="teamName">Team Name:</label>
+        <input type="text" id="teamName" name="teamName" th:value="${editTeamForm.getTeamName()}" th:field="*{teamName}" />
+
+    </div>
+
+
+
+
+    <div>
+        <label for="trainer">Trainer:</label>
+        <select id="trainer" th:field="*{trainerID}">
+            <option th:each="trainer:${listOfAvailableTrainers}" th:value="${trainer.getUserId()}" th:text="${trainer.getFirstName()}+' '+${trainer.getLastName()}"
+                    th:selected="${trainer.getUserId()==currentTrainer.getUserId()}"></option>
+
+        </select>
+
+    </div>
+
+    <div id="teamMembersTable_div" th:insert="~{fragments/teamMembersTable.html :: Table}">
+
+
+    </div>
+
+
+    <div class="formButtons">
+        <button type="submit">Edit Team</button>
+    </div>
+</form>
+
+
+</body>
+</html>

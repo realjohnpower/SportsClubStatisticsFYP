@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<h2> Team Events</h2>
+<div th:if="${message}" class="successMessage">
+  <p th:text="${message}"> </p>
+</div>
+
+<h2 th:if="${userTeamEvents.isEmpty()}">
+  There is currently no Team Events.
+</h2>
+
+<div class="centerButton">
+  <a th:href="@{'/teamEvents/addTeamEventForm'}">
+    <button sec:authorize="hasRole('TRAINER')">Add A Team Event</button>
+  </a>
+</div>
+
+<div class="scroll-table">
+<table th:unless="${userTeamEvents.isEmpty()}" class="table table-hover">
+<thead>
+  <tr>
+
+
+    <th>Event Name</th>
+    <th>Event Description</th>
+    <th>Event Location</th>
+    <th>Start Date And Time</th>
+    <th>Team</th>
+    <th sec:authorize="hasRole('PLAYER')">Going</th>
+    <th sec:authorize="hasRole('PLAYER')">Not Going</th>
+    <th sec:authorize="hasRole('TRAINER')"> Edit </th>
+    <th sec:authorize="hasRole('TRAINER')"> Add Team Session Stats </th>
+
+  </tr>
+
+  </thead>
+  <tr th:each="teamEvent: ${userTeamEvents}">
+
+
+
+    <td>
+      <a th:href="'/teamEvents/teamEventDrillDown/'+${teamEvent.getTeamEventId()}">
+        <span th:text="${teamEvent.getEventName()}"/>
+      </a>
+    </td>
+    <td th:text="${teamEvent.getEventDescription()}"></td>
+    <td th:text="${teamEvent.getLocation()}"></td>
+    <td th:text="${teamEvent.getStartDate()}"></td>
+    <td th:text="${teamEvent.getTeam().getTeamName()}"></td>
+
+
+
+
+
+    <td sec:authorize="hasRole('TRAINER')"> <a th:href="'/teamEvents/editTeamEventForm/'+${teamEvent.getTeamEventId()}"> <button>Edit</button></a> </td>
+    <td sec:authorize="hasRole('PLAYER')"> <a th:href="'/teamEvents/goingToTeamEvent/'+${teamEvent.getTeamEventId()}+'/true'"> <button>Going</button></a> </td>
+    <td sec:authorize="hasRole('PLAYER')"> <a th:href="'/teamEvents/goingToTeamEvent/'+${teamEvent.getTeamEventId()}+'/false'"> <button>Not Going</button></a> </td>
+    <td sec:authorize="hasRole('TRAINER')"> <a th:href="'/teamEvents/teamSessionStatsForm/'+${teamEvent.getTeamEventId()}"> <button>Add Team Session Stats</button></a> </td>
+    <td sec:authorize="hasAnyRole('TRAINER','PLAYER')"> <a th:href="'/teamEvents/viewTeamSessionStats/'+${teamEvent.getTeamEventId()}"> <button>ViewTeam Session Stats</button></a> </td>
+    <td sec:authorize="hasRole('TRAINER')">
+      <a th:href="'/teamEvents/removeTeamEvent/'+${teamEvent.getTeamEventId()}" >
+        <button th:onclick="'return confirm(\'Are You Sure You Want To Delete This Team Event\');'">Remove</button></a> </td>
+  </tr>
+
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+
+
+    <h2 th:text="'Add '+${playerPhysicalStats.getPlayer().getFirstName()}+' '+${playerPhysicalStats.getPlayer.getLastName()}+' Physical Stats'">
+
+
+    </h2>
+
+
+
+    <form th:action="@{/playerPhysicalStats/createPlayerPhysicalStats}" th:object="${playerPhysicalStats}"  method="post" >
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div>
+                    <label for="heightMetres">Height (Metres):</label>
+                    <input type="text" id="heightMetres" th:field="*{heightM}"/>
+                    </div>
+
+                    <div>
+                    <label for="weightKg">Weight (Kg)</label>
+                    <input type="text" id="weightKg" th:field="*{weightKg}"/>
+                    </div>
+
+                    <div>
+                    <label for="fatPercentage">Body Fat %:</label>
+                    <input type="text" id="fatPercentage" th:field="*{fatPercentage}"/>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+                    <input type="hidden"  th:field="*{player.userId}"/>
+                    <input type="hidden" th:name="teamId" th:value="${teamId}">
+
+
+
+        <div class="formButtons">
+            <input type="submit" id="submitButton" value="Add Player Physical Stats">
+        </div>
+    </form>
+
+    <a th:href="'/teams/teamDrillDown/'+${teamId}">Back To Team Details </a>
+</body>
+</html>

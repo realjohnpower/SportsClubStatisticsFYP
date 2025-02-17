@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+
+<div th:if="${message}" class="successMessage">
+    <p th:text="${message}"> </p>
+</div>
+
+<h1 th:text="'Welcome '+ ${member.getFirstName()}+' '+ ${member.getLastName()}+'!'"></h1>
+
+
+</body>
+</html>

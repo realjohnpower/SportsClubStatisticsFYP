@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<h1 th:text="${player.getFirstName()}+' '+
+            ${player.getLastName()} + ' Physical Stats'"></h1>
+
+
+
+<h2     th:if="${listOfPlayerPhysicalStats.isEmpty()}">
+        No Player Physical Stats Have Been Recorded Yet
+</h2>
+
+
+
+<div class="scroll-table">
+<table class="table table-hover" th:unless="${listOfPlayerPhysicalStats.isEmpty()}">
+<thead>
+    <tr>
+
+
+
+        <th>Height (Metres)</th>
+        <th>Weight (Kg)</th>
+        <th>Body Fat %</th>
+        <th>Body Mass Index (BMI)</th>
+
+
+    </tr>
+
+</thead>
+
+    <tr th:each="playerPhysicalStats: ${listOfPlayerPhysicalStats}">
+
+
+
+
+
+
+
+
+        <td th:text="${playerPhysicalStats.getHeightM()}"></td>
+
+        <td th:text="${playerPhysicalStats.getWeightKg()}"></td>
+
+        <td th:text="${playerPhysicalStats.getFatPercentage()}"></td>
+
+        <td th:text="${playerPhysicalStats.getBmi()}"></td>
+
+
+
+
+
+
+    </tr>
+
+
+</table>
+</div>
+
+
+
+<a th:href="'/teams/teamDrillDown/'+${teamId}">Back To Team Details </a>
+
+
+</body>
+</html>

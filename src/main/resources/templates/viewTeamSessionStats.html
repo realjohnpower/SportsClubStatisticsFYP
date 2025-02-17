@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<h1 th:text="${teamEvent.getEventName()}+' Session Stats'" ></h1>
+
+
+
+<h2     th:if="${teamEvent.getListOfPlayerSessionsStats().isEmpty()}"
+        th:text="${teamEvent.getEventName()}+' Session Stats has not been recorded yet'" ></h2>
+
+
+
+<div class="scroll-table">
+<table class="table table-hover" th:unless="${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+<thead>
+    <tr>
+
+
+        <th> Name</th>
+        <th>Resting BPM</th>
+        <th>Average BPM</th>
+        <th>Max BPM</th>
+        <th>Calories Burned</th>
+
+
+    </tr>
+
+</thead>
+
+    <tr th:each="playerSessionStats: ${teamEvent.getListOfPlayerSessionsStats()}">
+
+
+
+
+
+
+        <td  th:text="${playerSessionStats.getPlayer().getFirstName()}+' '+
+            ${playerSessionStats.getPlayer().getLastName()}"></td>
+
+        <td th:text="${playerSessionStats.getRestingBpm()}"></td>
+
+        <td th:text="${playerSessionStats.getAverageBpm()}"></td>
+
+        <td th:text="${playerSessionStats.getMaxBpm()}"></td>
+
+        <td th:text="${playerSessionStats.getCaloriesBurned()}"></td>
+
+
+
+
+
+
+    </tr>
+
+
+</table>
+</div>
+
+
+
+<a th:href="'/teamEvents/viewUsersTeamEvents'">Back To Team Events </a>
+
+
+</body>
+</html>

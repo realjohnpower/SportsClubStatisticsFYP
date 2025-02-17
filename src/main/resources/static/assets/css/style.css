@@ -1,0 +1,134 @@
+form {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff; /* White background for form */
+    padding: 20px; /* Padding for form */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+.button-link, .button-link:hover, input[type="submit"]{
+    color: white;
+    text-decoration: none;
+}
+
+h1,h2, .ticketButtons, .formButtons{
+    text-align: center;
+}
+
+label {
+    display: block; /* Block display for labels */
+    margin: 10px 0 5px; /* Margin for spacing */
+}
+
+input[type="number"], input[type="text"] , input[type="email"], input[type="datetime-local"]
+,input[type="date"], textarea, select{
+    width: calc(100% - 22px); /* Full width minus padding */
+    padding: 10px; /* Padding for input fields */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding in width */
+}
+
+button, input[type="submit"] {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    padding: 10px 15px; /* Padding for button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s;
+    /* Smooth transition */
+}
+
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.centerButton{
+    text-align: center;
+}
+
+.successMessage{
+   font-size: medium;
+   text-align: center;
+    color: green;
+}
+
+.column {
+    float: left;
+    width: 20.33%;
+    padding: 5px;
+}
+
+.scroll-table{height:auto; max-height:200px; overflow-y:scroll; display:block; width:100%;}
+
+.chart-container {
+    display: flex; /* Aligns graphs horizontally */
+    justify-content: space-around; /* Even spacing */
+}
+.chart {
+    width: 50%; /* Each graph takes half of the space */
+}
+#user-registered-line-chart{
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+thead {
+
+    top:0;
+    position: sticky;
+    background-color: white;
+
+}
+
+#age-piechart{
+    grid-column-start: 6;
+    grid-column-end: 10;
+    width: 900px;
+    height: 500px;
+}
+
+#gender-piechart{
+    grid-column-start: 1;
+    grid-column-end: 4;
+
+    width: 900px;
+    height: 500px;
+}
+
+.left-table{
+    grid-column-start: 1;
+    grid-column-end: 6;
+
+}
+.right-table{
+    grid-column-start: 8;
+    grid-column-end: 13;
+}
+
+
+.grid-container{
+    display:grid;
+    grid-template-columns:repeat(12,8.3%)
+}
+
+#clubEventAttendance-piechart{
+    grid-column-start: 4;
+    grid-column-end: 10;
+
+    width: 900px;
+    height: 500px;
+
+}
+#teamEventAttendance-piechart{
+    grid-column-start: 4;
+    grid-column-end: 10;
+
+    width: 900px;
+    height: 500px;
+}
+
+
+

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+<body>
+<form th:action="@{/user/registerMember}" th:object="${newMemberForm}" method="post">
+
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName"  th:field="*{firstName}" />
+
+    </div>
+
+
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName"    th:field="*{lastName}" />
+
+    </div>
+
+    <div>
+        <label for="birthday">Birthday:</label>
+        <input type="date" id="birthday" name="birthday" th:field="*{dateOfBirth}">
+
+    </div>
+
+    <div>
+        <label for="gender">Gender:</label>
+        <select  id="gender" name="gender" th:field="*{gender}">
+            <option value="Male" >Male</option>
+            <option value="Female" >Female</option>
+        </select>
+
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"  th:field="*{email}"/>
+    </div>
+
+
+
+
+    <div>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password"  th:field="*{password}" />
+
+    </div>
+
+    <div>
+        <label for="role">ROLE:</label>
+        <select  th:field="*{roles}" id="role">
+            <option th:each="role:${roles}" th:value="${role.getRoleID()}" th:text="${role.getRole()}"></option>
+
+        </select>
+
+    </div>
+
+
+
+    <div class="formButtons">
+        <button type="submit">Add Member</button>
+    </div>
+</form>
+
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:insert="~{fragments/navHeader :: navigation-header}">
+
+</div>
+
+<body>
+<form th:action="@{/teamEvents/editTeamEvent}" th:object="${editTeamEventForm}" method="post">
+
+  <div>
+
+    <input type="hidden" id="eventID" name="eventID"  th:value="${editTeamEventForm.getTeamEventId()}" th:field="*{teamEventId}" />
+
+  </div>
+
+  <div>
+    <label for="eventName">Event Name:</label>
+    <input type="text" id="eventName" name="eventName"  th:value="${editTeamEventForm.getEventName()}" th:field="*{eventName}" />
+
+  </div>
+
+
+  <div>
+    <label for="clubEventDescription">Event Description:</label>
+    <textarea id="clubEventDescription" name="clubEventDescription"  th:value="${editTeamEventForm.getEventDescription()}"  th:field="*{eventDescription}" >
+    </textarea>
+
+  </div>
+
+  <div>
+    <label for="startDate">Start Date:</label>
+    <input type="datetime-local" id="startDate" name="startDate" th:value="${{editTeamEventForm.getEventStartDate()}}" th:field="*{eventStartDate}">
+
+  </div>
+
+
+
+  <div>
+    <label for="location">Location:</label>
+    <textarea id="location" name="clubEventDescription" th:value="${editTeamEventForm.getLocation()}"   th:field="*{location}" >
+    </textarea>
+
+  </div>
+
+  <div>
+    <label for="team">Team:</label>
+    <select id="team" th:field="*{teamId}">
+      <option th:each="team:${listOfTeams}" th:value="${team.getTeam_Id()}" th:text="${team.getTeamName()}"
+              th:selected="${team.getTeam_Id()==currentTeam.getTeam_Id()}"></option>
+
+    </select>
+
+  </div>
+
+
+  <div class="formButtons">
+    <button type="submit">Update Team Event</button>
+  </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
