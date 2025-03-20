@@ -34,6 +34,7 @@
     <th sec:authorize="hasRole('PLAYER')">Not Going</th>
     <th sec:authorize="hasRole('TRAINER')"> Edit </th>
     <th sec:authorize="hasRole('TRAINER')"> Add Team Session Stats </th>
+    <th sec:authorize="hasAnyRole('TRAINER','PLAYER')"> View Team Session Stats </th>
 
   </tr>
 

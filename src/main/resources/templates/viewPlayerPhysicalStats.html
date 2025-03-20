@@ -3,6 +3,22 @@
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
+<script th:inline="javascript">
+
+    window.onload = function() {
+
+
+        let jsonString=[[${heightStats}]];
+
+
+        drawPlayerPhysicalStatsLineChart(jsonString);
+
+
+
+
+
+    };
+</script>
 <body>
 <h1 th:text="${player.getFirstName()}+' '+
             ${player.getLastName()} + ' Physical Stats'"></h1>
@@ -64,6 +80,10 @@
 
 <a th:href="'/teams/teamDrillDown/'+${teamId}">Back To Team Details </a>
 
+<button th:onclick="updateChartData([[${heightStats}]])">Height</button>
+<button th:onclick="updateChartData([[${bmiStats}]])">BMI</button>
+<button th:onclick="updateChartData([[${weightStats}]])">Weight</button>
 
+<div id = "physical-stats-line-chart"></div>
 </body>
 </html>

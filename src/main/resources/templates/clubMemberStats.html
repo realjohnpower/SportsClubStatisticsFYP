@@ -11,7 +11,7 @@
         var femaleCount = [[${allFemaleUsersCount}]];
 
         // Call your gender chart function with the passed values
-        drawGenderChart(maleCount, femaleCount);
+        drawGenderChart(maleCount, femaleCount,'Club Members','Gender');
 
 
 
@@ -22,7 +22,9 @@
             {"ageGroup": "75-100", "Male": [[${malesBetween75to100}]], "Female": [[${femalesBetween75to100}]]}
         ];
         displayAgeGroupBarChart(data);
+
         let usersRegisteredData= JSON.parse([[${listOfNewUsersPast6monthsJson}]])
+
         displayUserRegisteredLineChart(usersRegisteredData);
 
     };
@@ -34,10 +36,11 @@
 
 
 
-    <button th:onclick="updateGenderChart([[${allMaleUsersCount}]],[[${allFemaleUsersCount}]])">All Club Members</button>
-    <button th:onclick="updateGenderChart([[${allMaleTrainersCount}]],[[${allFemaleTrainersCount}]])">Trainers</button>
-    <button th:onclick="updateGenderChart([[${allMalePlayersCount}]],[[${allFemalePlayersCount}]])">Players</button>
-    <button th:onclick="updateGenderChart([[${allMaleAdminsCount}]],[[${allFemaleAdminsCount}]])">Admin</button>
+    <button th:onclick="updateGenderChart([[${allMaleUsersCount}]],[[${allFemaleUsersCount}]],'All Members','Gender')">All Members</button>
+    <button th:onclick="updateGenderChart([[${allMaleClubMembersCount}]],[[${allFemaleClubMembersCount}]],'Club Members','Gender')">Club Members</button>
+    <button th:onclick="updateGenderChart([[${allMaleTrainersCount}]],[[${allFemaleTrainersCount}]],'Trainers','Gender')">Trainers</button>
+    <button th:onclick="updateGenderChart([[${allMalePlayersCount}]],[[${allFemalePlayersCount}]],'Players','Gender')">Players</button>
+    <button th:onclick="updateGenderChart([[${allMaleAdminsCount}]],[[${allFemaleAdminsCount}]],'Admin','Gender')">Admin</button>
   <div class="chart-container">
 <div id="gender-barchart" class="chart"></div>
 

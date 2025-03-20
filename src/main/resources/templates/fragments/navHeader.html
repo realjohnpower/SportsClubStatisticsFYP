@@ -16,6 +16,8 @@
         <script src="/assets/javascript/genderPieChart.js"></script>
         <script src="/assets/javascript/genderAgeGroupBarChart.js"></script>
         <script src="/assets/javascript/sixMonthUserRegisteredLineChart.js"></script>
+        <script src="/assets/javascript/playerPhysicalStatsLineChart.js"></script>
+        <script src="/assets/javascript/teamEventStatisticsBarChart.js"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="/assets/css/style.css">
 
@@ -36,37 +38,36 @@
 
                 <li sec:authorize="isAuthenticated()"><a th:href="@{'/clubEvents/viewClubEvents'}">Club Events</a></li>
 
-                <li sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{'/user/registerMemberForm'}">Register A Club Member </a>
-                </li>
 
 
-                <li sec:authorize="hasRole('TRAINER')">
-                    <a th:href="@{'/teamEvents/addTeamEventForm'}">Add a Team Event </a>
-                </li>
+
 
                 <li sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{'/teams/viewTeams'}">Manage Teams </a>
+                    <a th:href="@{'/teams/viewTeams'}">Teams </a>
                 </li>
 
                 <li sec:authorize="hasRole( 'TRAINER')">
-                    <a th:href="@{'/teams/viewTrainerTeams'}">View Training Teams </a>
+                    <a th:href="@{'/teams/viewTrainerTeams'}">Teams </a>
                 </li>
 
                 <li sec:authorize="hasRole( 'PLAYER')">
-                    <a th:href="@{'/teams/viewPlayerTeams'}">View Your Teams </a>
+                    <a th:href="@{'/teams/viewPlayerTeams'}">Teams </a>
                 </li>
 
 
 
 
                 <li sec:authorize="hasAnyRole( 'PLAYER','TRAINER')">
-                    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">View Team Events </a>
+                    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">Team Events </a>
                 </li>
 
 
                 <li sec:authorize="hasAnyRole( 'ADMIN')">
                     <a th:href="@{'/user/generateClubMemberStats'}">View Club Member Stats </a>
+                </li>
+
+                <li sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{'/user/registerMemberForm'}">Register A Club Member </a>
                 </li>
 
                 <li sec:authorize="isAuthenticated()">

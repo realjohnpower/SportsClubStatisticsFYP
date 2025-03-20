@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2025 at 01:22 PM
+-- Generation Time: Mar 16, 2025 at 04:46 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,11 +20,12 @@ SET time_zone = "+00:00";
 --
 -- Database: `sport_club_db`
 --
-DROP DATABASE IF EXISTS sport_club_db
 
-CREATE DATABASE sport_club_db
+DROP DATABASE IF EXISTS `sport_club_db`;
 
-USE sport_club_db
+CREATE DATABASE `sport_club_db`;
+
+USE `sport_club_db`;
 -- --------------------------------------------------------
 
 --
@@ -44,7 +45,8 @@ CREATE TABLE `club_events` (
 --
 
 INSERT INTO `club_events` (`club_event_id`, `club_event_name`, `club_event_description`, `start_date`, `location`) VALUES
-(1, 'dinner dance', 0x44696e6e65722044616e636520617420436173746c65204f616b7320486f74656c206f6e207468652032326e64204f66204175677573742061742032303235, '2025-08-22 20:30:00', 'Castle Oaks Hotel');
+(1, 'dinner dance', 0x44696e6e65722044616e636520617420436173746c65204f616b7320486f74656c206f6e207468652032326e64204f66204175677573742061742032303235, '2025-08-22 20:30:00', 'Castle Oaks Hotel'),
+(2, 'Hurling Final', 0x4875726c696e672046696e616c20616761696e737420436c6f6e6c617261, '2025-02-17 09:00:00', 'Cusack Park, Ennis');
 
 -- --------------------------------------------------------
 
@@ -64,7 +66,8 @@ CREATE TABLE `club_event_attendance` (
 --
 
 INSERT INTO `club_event_attendance` (`club_event_attendance_id`, `club_event_id`, `user_id`, `attendance`) VALUES
-(1, 1, 1, 1);
+(1, 1, 1, 1),
+(2, 2, 8, 1);
 
 -- --------------------------------------------------------
 
@@ -87,11 +90,9 @@ CREATE TABLE `player_physical_stats` (
 --
 
 INSERT INTO `player_physical_stats` (`player_physical_stats_id`, `user_id`, `weight_kg`, `height_m`, `fat_percentage`, `bmi`, `date_recorded`) VALUES
-(1, 7, 120, 1, 40, 120, '2025-02-05'),
-(2, 2, 120, 120, 25, 0.008333333333333333, '2025-02-05'),
-(3, 2, 100, 190, 56, 0.002770083102493075, '2025-02-05'),
-(4, 7, 80, 1.75, 40, 26.122448979591837, '2025-02-05'),
-(5, 7, 72, 1.8, 23, 22.22222222222222, '2025-02-05');
+(11, 2, 80, 1.8, 15, 24.691358024691358, '2025-02-18'),
+(12, 2, 100, 2, 20, 87, '2025-02-16'),
+(13, 2, 90, 2.3, 18, 95, '2025-02-10');
 
 -- --------------------------------------------------------
 
@@ -132,7 +133,9 @@ CREATE TABLE `teams` (
 
 INSERT INTO `teams` (`team_id`, `team_name`, `user_id`) VALUES
 (2, 'hurling team ', 3),
-(3, 'football team', 3);
+(3, 'football team', 3),
+(4, 'Intermediate Hurling Team', 3),
+(5, 'soccer team', 3);
 
 -- --------------------------------------------------------
 
@@ -154,7 +157,11 @@ CREATE TABLE `team_events` (
 --
 
 INSERT INTO `team_events` (`team_event_id`, `event_name`, `event_description`, `start_date`, `location`, `team_id`) VALUES
-(1, 'hurling match', 'match vs Kilmacud Crokes', '2025-12-22 19:00:00', 'Dublin', 2);
+(1, 'hurling match', 'match vs Kilmacud Crokes', '2025-12-22 19:00:00', 'Dublin', 2),
+(4, 'Hurling training', 'Hurling Training for match on Saturday', '2025-02-20 19:00:00', 'Clonlara GAA Grounds', 4),
+(5, 'test session', 'test', '2025-03-07 17:35:00', 'test', 3),
+(6, 'test soccer session', 'test soccer session', '2025-03-30 18:52:00', 'Killaoloe', 5),
+(7, 'test Team Event', 'test', '2025-03-11 14:07:00', 'tets location', 5);
 
 -- --------------------------------------------------------
 
@@ -195,7 +202,12 @@ CREATE TABLE `team_members` (
 INSERT INTO `team_members` (`team_member_id`, `team_id`, `user_id`) VALUES
 (2, 2, 2),
 (4, 3, 7),
-(5, 2, 7);
+(5, 2, 7),
+(6, 4, 7),
+(9, 4, 9),
+(10, 5, 2),
+(11, 5, 9),
+(12, 5, 7);
 
 -- --------------------------------------------------------
 
@@ -218,8 +230,17 @@ CREATE TABLE `team_session_stats` (
 --
 
 INSERT INTO `team_session_stats` (`team_session_stats_id`, `team_event_id`, `user_id`, `resting_bpm`, `avg_bpm`, `max_bpm`, `calories_burned`) VALUES
-(9, 1, 2, 23, 24, 25, 200),
-(10, 1, 7, 45, 56, 78, 300);
+(9, 1, 2, 78, 24, 25, 200),
+(10, 1, 7, 45, 56, 78, 300),
+(11, 4, 7, 145, 178, 186, 300),
+(12, 4, 9, 120, 167, 178, 250),
+(13, 5, 7, 123, 177, 182, 201),
+(14, 6, 7, 125, 168, 186, 200),
+(15, 6, 2, 159, 166, 186, 295),
+(16, 6, 9, 137, 173, 191, 287),
+(17, 7, 2, 149, 173, 191, 292),
+(18, 7, 9, 131, 179, 186, 262),
+(19, 7, 7, 159, 175, 198, 283);
 
 -- --------------------------------------------------------
 
@@ -248,7 +269,10 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, 
 (3, 'Mary ', 'Smith', 'MSmith@gmail.com', '$2a$10$7ifz7OItSdyP3m.wK9uRfe9ffMXHYN0NvykMTSFczs59z3TZLL0Eu', 'Female', '1983-07-22', '2025-01-10'),
 (5, 'James', 'Harold', 'JHarold@gmail.com', '$2a$10$vpPYgqwiWYB/0Ls27Ribe.0CyqLs4I8fDYFSfRS6KHxOEKUM.Deba', 'Male', '1967-12-23', '2025-01-10'),
 (6, 'John', 'Smith', 'johnsmith456@gmail.com', '$2a$10$fcmfROdHd6NlXG5Pmc7So.I6d/opQcWHN/.Zdgbf5yX0LFrbQeqoW', 'Male', '1947-12-22', '2025-01-10'),
-(7, 'Jake', 'O\'Brien', 'JOB@gmail.com', '$2a$10$Jlj6i4leJXSvlTjQ/CPp7.chg.EYxuOlPOmJ.XzpgyoIXht7iFkY6', 'Male', '2005-12-12', '2025-01-10');
+(7, 'Jake', 'O\'Brien', 'JOB@gmail.com', '$2a$10$Jlj6i4leJXSvlTjQ/CPp7.chg.EYxuOlPOmJ.XzpgyoIXht7iFkY6', 'Male', '2005-12-12', '2025-01-10'),
+(8, 'John', 'Doe', 'JohnDoe@gmail.com', '$2a$10$YwnsOu/1dhuSjLRiUkHam.iQ2FZIpTutpiqHoyB.ZohJIwh5nX.Z.', 'Male', '2000-01-14', '2025-02-15'),
+(9, 'Jason', 'Powell', 'JasonPowell@Gmail.com', '$2a$10$H9/JA/filDZe2Ay7ZSMb9.YQf7y9avD0QLvy0jxGiUykJWKWy9vee', 'Male', '2000-09-17', '2025-02-15'),
+(10, 'jason', 'smithy', 'jsmithy@gmail.com', 'password123', 'Male', '2015-02-03', '2024-11-01');
 
 -- --------------------------------------------------------
 
@@ -272,7 +296,9 @@ INSERT INTO `user_roles` (`user_role_id`, `user_id`, `role_id`) VALUES
 (3, 3, 2),
 (4, 5, 4),
 (5, 6, 4),
-(6, 7, 3);
+(6, 7, 3),
+(7, 8, 4),
+(8, 9, 3);
 
 --
 -- Indexes for dumped tables
@@ -365,19 +391,19 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT for table `club_events`
 --
 ALTER TABLE `club_events`
-  MODIFY `club_event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `club_event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `club_event_attendance`
 --
 ALTER TABLE `club_event_attendance`
-  MODIFY `club_event_attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `club_event_attendance_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `player_physical_stats`
 --
 ALTER TABLE `player_physical_stats`
-  MODIFY `player_physical_stats_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `player_physical_stats_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -389,13 +415,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `team_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `team_events`
 --
 ALTER TABLE `team_events`
-  MODIFY `team_event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `team_event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `team_event_attendance`
@@ -407,25 +433,25 @@ ALTER TABLE `team_event_attendance`
 -- AUTO_INCREMENT for table `team_members`
 --
 ALTER TABLE `team_members`
-  MODIFY `team_member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `team_member_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `team_session_stats`
 --
 ALTER TABLE `team_session_stats`
-  MODIFY `team_session_stats_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `team_session_stats_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `user_role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables

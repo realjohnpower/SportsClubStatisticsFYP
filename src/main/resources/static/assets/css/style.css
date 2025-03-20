@@ -60,7 +60,10 @@ button:hover {
     padding: 5px;
 }
 
-.scroll-table{height:auto; max-height:200px; overflow-y:scroll; display:block; width:100%;}
+
+
+
+.scroll-table{height:auto; max-height:300px; overflow-y:scroll; display:block; width:100%;}
 
 .chart-container {
     display: flex; /* Aligns graphs horizontally */
@@ -75,6 +78,7 @@ button:hover {
     justify-content: center;
 }
 
+
 thead {
 
     top:0;
@@ -83,20 +87,9 @@ thead {
 
 }
 
-#age-piechart{
-    grid-column-start: 6;
-    grid-column-end: 10;
-    width: 900px;
-    height: 500px;
-}
 
-#gender-piechart{
-    grid-column-start: 1;
-    grid-column-end: 4;
 
-    width: 900px;
-    height: 500px;
-}
+
 
 .left-table{
     grid-column-start: 1;
@@ -114,21 +107,7 @@ thead {
     grid-template-columns:repeat(12,8.3%)
 }
 
-#clubEventAttendance-piechart{
-    grid-column-start: 4;
-    grid-column-end: 10;
 
-    width: 900px;
-    height: 500px;
-
-}
-#teamEventAttendance-piechart{
-    grid-column-start: 4;
-    grid-column-end: 10;
-
-    width: 900px;
-    height: 500px;
-}
 
 
 

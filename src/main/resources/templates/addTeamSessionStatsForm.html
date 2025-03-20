@@ -8,7 +8,11 @@
 
     <h2>Add Team Session Stats</h2>
 
-
+    <div class="centerButton">
+        <a th:href="@{'/teamEvents/getCsvUploadForm/'+${teamEvent.getTeamEventId()}}">
+            <button>Upload CSV File</button>
+        </a>
+    </div>
 
     <form th:action="@{/teamEvents/createTeamSessionStats}" th:object="${teamSessionStatsDTO}"  method="post" >
         <div class="scroll-table">

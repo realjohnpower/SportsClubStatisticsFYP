@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -123,6 +124,7 @@ public class TeamEventController {
         String jsonTeamEventAttendanceString = objectMapper.writeValueAsString(eventAttendanceMap);
         model.addAttribute("teamEventAttendanceStats", jsonTeamEventAttendanceString);
 
+
         return new ModelAndView("teamEventDrillDown", "teamEvent", teamEvent );
 
     }
@@ -186,17 +188,38 @@ public class TeamEventController {
     }
 
     @GetMapping("/teamSessionStatsForm/{teamEventId}")
-    public String displayTeamStatsForm(@PathVariable("teamEventId") Integer teamEventID,Model model){
+    public String displayTeamStatsForm(@PathVariable("teamEventId") Integer teamEventID,Model model) throws JsonProcessingException {
         TeamEvent teamEvent = teamEventService.getTeamEventById(teamEventID);
         TeamSessionStatsDTO teamSessionStatsDTO= teamEventService.getNewTeamSessionStatsDTO(teamEvent);
+
+        model.addAttribute("teamEvent", teamEvent);
+
 
         model.addAttribute("teamSessionStatsDTO", teamSessionStatsDTO);
         return "addTeamSessionStatsForm";
     }
 @GetMapping("viewTeamSessionStats/{id}")
-public String viewTeamSessionStats(@PathVariable("id") Integer id, Model model) {
+public String viewTeamSessionStats(@PathVariable("id") Integer id, Model model) throws JsonProcessingException {
         TeamEvent teamEvent = teamEventService.getTeamEventById(id);
         model.addAttribute("teamEvent", teamEvent);
+    ObjectMapper objectMapper = new ObjectMapper();
+    List<Map<String, Object>> tenHighestMaxBPM = teamEventService.getTenHighestStatsForSession(teamEvent,"highestBPM");
+    List<Map<String,Object>> tehHighestAverageBPM=teamEventService.getTenHighestStatsForSession(teamEvent,"averageBPM");
+    List<Map<String,Object>> tenHighestRestingBPM=teamEventService.getTenHighestStatsForSession(teamEvent,"restingBPM");
+    List<Map<String,Object>> tenHighestCaloriesBurned=teamEventService.getTenHighestStatsForSession(teamEvent,"caloriesBurned");
+    String tenHighestMaxBPMString = objectMapper.writeValueAsString(tenHighestMaxBPM);
+    String tenHighestAverageBPMString = objectMapper.writeValueAsString(tehHighestAverageBPM);
+    String tenHighestRestingBPMString = objectMapper.writeValueAsString(tenHighestRestingBPM);
+    String tenHighestCaloriesBurnedString = objectMapper.writeValueAsString(tenHighestCaloriesBurned);
+    model.addAttribute("tenHighestMaxBPM",tenHighestMaxBPMString);
+    model.addAttribute("tehHighestAverageBPM",tenHighestAverageBPMString);
+    model.addAttribute("tenHighestRestingBPM",tenHighestRestingBPMString);
+    model.addAttribute("tenHighestCaloriesBurned",tenHighestCaloriesBurnedString);
+
+    System.out.println(tenHighestMaxBPMString);
+    System.out.println(tenHighestAverageBPMString);
+    System.out.println(tenHighestRestingBPMString);
+    System.out.println(tenHighestCaloriesBurnedString);
         return "viewTeamSessionStats";
 }
     @PostMapping("/createTeamSessionStats")
@@ -208,6 +231,25 @@ public String viewTeamSessionStats(@PathVariable("id") Integer id, Model model) 
         teamEventService.createTeamSessionStatsForTeamEvent(teamSessionStatsDTO.getTeamSessionStats());
         redirectAttributes.addFlashAttribute("successMessage", "Team Session Stats has been created");
         return "redirect:/teamEvents/viewUsersTeamEvents";
+
+    }
+
+    @GetMapping("/getCsvUploadForm/{id}")
+    public String getCsvUploadForm(@PathVariable("id") Integer id, Model model) {
+        TeamEvent teamEvent=teamEventService.getTeamEventById(id);
+        model.addAttribute("teamEvent", teamEvent);
+        return "addTeamSessionStatsCSV";
+    }
+    @PostMapping("/createTeamSessionStatsFromCSVFile/{id}")
+    public String createTeamSessionStatsFromCSVFile(Model model,
+                                                RedirectAttributes redirectAttributes,
+                                                @PathVariable("id")String teamSessionId,
+                                                @RequestParam("file") MultipartFile sessionCsvFile) {
+        Integer teamEventID = Integer.parseInt(teamSessionId);
+        TeamEvent teamEvent = teamEventService.getTeamEventById(teamEventID);
+        teamEventService.createTeamSessionStatsForTeamSessionFromCsvFile(teamEvent, sessionCsvFile);
+        redirectAttributes.addFlashAttribute("successMessage", "Team Session Stats has been created");
+        return "redirect:/teamEvents/viewTeamSessionStats/"+teamSessionId;
 
     }
 

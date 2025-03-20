@@ -1,8 +1,10 @@
 package com.example.sportsclubstatisticsfyp.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,8 +38,9 @@ public class PlayerPhysicalStats {
 
     @Basic(optional = false)
     @Column(name="date_recorded")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
-    private LocalDateTime dateRecorded;
+    @DateTimeFormat(pattern="YYYY-MM-dd")
+
+    private LocalDate dateRecorded;
 
     public Integer getPlayerPhysicalStatsId() {
         return playerPhysicalStatsId;
@@ -89,11 +92,11 @@ public class PlayerPhysicalStats {
 
 
 
-    public LocalDateTime getDateRecorded() {
+    public LocalDate getDateRecorded() {
         return dateRecorded;
     }
 
-    public void setDateRecorded(LocalDateTime dateRecorded) {
+    public void setDateRecorded(LocalDate dateRecorded) {
         this.dateRecorded = dateRecorded;
     }
 }
