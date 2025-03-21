@@ -10,6 +10,56 @@
 </div>
 
 <h1 th:text="'Welcome '+ ${member.getFirstName()}+' '+ ${member.getLastName()}+'!'"></h1>
+<h2>Please select one of the options below </h2>
+<div class="indexButton" sec:authorize="hasRole('TRAINER')">
+<a th:href="@{'/teams/viewTrainerTeams'}">
+    <button class="indexButton">View Your Teams</button>
+</a>
+</div>
+
+<div class ="indexButton" sec:authorize="hasRole('PLAYER')">
+<a th:href="@{'/teams/viewPlayerTeams'}">
+    <button>View Your Teams</button>
+</a>
+</div>
+
+    <div class ="indexButton" sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{'/teams/viewTeams'}">
+            <button>View Teams</button>
+        </a>
+</div>
+
+</div>
+
+<div class ="indexButton" sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{'/user/generateClubMemberStats'}">
+        <button>View Statistics On Club Members</button>
+    </a>
+</div>
+
+<div class ="indexButton" sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{'/user/registerMemberForm'}">
+        <button>Register A New Club Member</button>
+    </a>
+</div>
+
+<div class="indexButton" sec:authorize="!hasRole('ADMIN')">
+<a th:href="@{'/clubEvents/viewClubEvents'}">
+    <button>View Upcoming Club Events</button>
+</a>
+</div>
+
+<div class="indexButton" sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{'/clubEvents/viewClubEvents'}">
+        <button>Manage Upcoming Club Events</button>
+    </a>
+</div>
+
+<div class="indexButton" sec:authorize="hasAnyRole('TRAINER','PLAYER')">
+<a th:href="@{'/teamEvents/viewUsersTeamEvents'}">
+    <button>View Team Sessions</button>
+</a>
+</div>
 
 
 </body>

@@ -5,9 +5,11 @@
 </div>
 <body>
 <h2> Club Events</h2>
-<div th:if="${message}" class="successMessage">
-  <p th:text="${message}"> </p>
+
+<div th:if="${successMessage}" class="successMessage">
+  <h3 th:text="${successMessage}"> </h3>
 </div>
+
 
 
 
@@ -51,7 +53,7 @@
     </td>
     <td th:text="${clubEvent.getClubEventDescription()}"></td>
     <td th:text="${clubEvent.getLocation()}"></td>
-    <td th:text="${clubEvent.getStartDate()}"></td>
+    <td th:text="${#temporals.format(clubEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"></td>
 
 
 

@@ -16,6 +16,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -70,8 +71,10 @@ public class TeamEventService {
 
     public List<TeamEvent> getUsersTeamEvents(Set<Team> userTeams){
         List<TeamEvent> teamEvents = new ArrayList<>();
+
         for(Team team : userTeams){
             for(TeamEvent teamEvent:team.getListOfTeamEvents()){
+
                 teamEvents.add(teamEvent);
             }
         }

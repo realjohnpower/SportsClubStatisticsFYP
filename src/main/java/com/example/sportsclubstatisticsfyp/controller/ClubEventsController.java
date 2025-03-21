@@ -47,10 +47,6 @@ public class ClubEventsController {
 
 
         clubEventsService.createClubEvent(newClubEvent);
-
-
-
-
         redirectAttributes.addFlashAttribute("successMessage", "Club Event has been created");
         return new ModelAndView("redirect:/clubEvents/viewClubEvents");
 
@@ -86,6 +82,8 @@ public class ClubEventsController {
 
         String jsonClubEventAttendanceString = objectMapper.writeValueAsString(eventAttendanceMap);
         model.addAttribute("clubEventAttendanceStats", jsonClubEventAttendanceString);
+        model.addAttribute("notAttendingCount",notAttendingCount);
+        model.addAttribute("attendingCount",attendingCount);
         return new ModelAndView("clubEventDrillDown", "clubEvent", clubEvent );
 
     }

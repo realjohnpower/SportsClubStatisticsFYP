@@ -3,7 +3,7 @@
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
-<script th:inline="javascript">
+<script th:inline="javascript" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">
 
     window.onload = function() {
 
@@ -23,6 +23,9 @@
 <h1 th:text="${player.getFirstName()}+' '+
             ${player.getLastName()} + ' Physical Stats'"></h1>
 
+<div th:if="${successMessage}" class="successMessage">
+    <p th:text="${successMessage}"> </p>
+</div>
 
 
 <h2     th:if="${listOfPlayerPhysicalStats.isEmpty()}">
@@ -57,13 +60,13 @@
 
 
 
-        <td th:text="${playerPhysicalStats.getHeightM()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getHeightM(), 2, 2)}"></td>
 
-        <td th:text="${playerPhysicalStats.getWeightKg()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getWeightKg(), 2, 2)}"></td>
 
-        <td th:text="${playerPhysicalStats.getFatPercentage()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getFatPercentage(), 2, 2)}"></td>
 
-        <td th:text="${playerPhysicalStats.getBmi()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getBmi(), 2, 2)}"></td>
 
 
 
@@ -79,10 +82,11 @@
 
 
 <a th:href="'/teams/teamDrillDown/'+${teamId}">Back To Team Details </a>
-
-<button th:onclick="updateChartData([[${heightStats}]])">Height</button>
-<button th:onclick="updateChartData([[${bmiStats}]])">BMI</button>
-<button th:onclick="updateChartData([[${weightStats}]])">Weight</button>
+<div class="graph-button-container">
+<button class="graph-button" th:onclick="updateChartData([[${heightStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Height</button>
+<button class="graph-button" th:onclick="updateChartData([[${bmiStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">BMI</button>
+<button class="graph-button" th:onclick="updateChartData([[${weightStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Weight</button>
+</div>
 
 <div id = "physical-stats-line-chart"></div>
 </body>

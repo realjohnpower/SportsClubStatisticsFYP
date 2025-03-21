@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,7 @@ public class ClubEventsService {
     }
 
     public List<ClubEvents> getAllClubEvents(){
+
         return clubEventsRepository.findAll();
     }
 

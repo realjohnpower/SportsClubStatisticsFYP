@@ -36,7 +36,7 @@ public class ClubEvents implements Serializable {
         @Basic(optional = false)
         @Column(name = "start_date")
         @Temporal(TemporalType.TIMESTAMP)
-        @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern="dd/MM/yyyy HH:mm")
         private LocalDateTime startDate;
 
 

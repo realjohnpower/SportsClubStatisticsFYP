@@ -3,7 +3,7 @@
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
-<script th:inline="javascript">
+<script th:inline="javascript" th:if="!${clubEvent.getAttendanceList().isEmpty()}">
     window.onload = function() {
 
         let clubEventAttendanceStats=JSON.parse([[${clubEventAttendanceStats}]]);
@@ -19,12 +19,12 @@
 
 <p><strong>Event Description :</strong> <span th:text="${clubEvent.getClubEventDescription()}"/><br></p>
 <p><strong>Event Location :</strong> <span th:text="${clubEvent.getLocation()}"/><br></p>
-<p> <strong> Event Start Date: </strong> <span th:text="${clubEvent.getStartDate()}"/><br></p>
+<p> <strong> Event Start Date: </strong> <span th:text="${#temporals.format(clubEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"/><br></p>
 
 
 <div class="grid-container">
-<div class="left-table">
-<h2> Going: </h2>
+<div class="left-table" th:if="!${clubEvent.getAttendanceList().isEmpty()}">
+    <h2 th:text="'Going: '+${attendingCount} "/>
 <div class="scroll-table">
 <table class="table table-hover" th:unless="${clubEvent.getAttendanceList().isEmpty()}">
 <thead>
@@ -64,8 +64,8 @@
 </div>
 </div>
 
-<div class="right-table">
-<h2> Not Going: </h2>
+<div class="right-table" th:if="!${clubEvent.getAttendanceList().isEmpty()}">
+<h2 th:text="'Not Going: '+${notAttendingCount} "/>
 <div class="scroll-table">
 <table class="table table-hover" th:unless="${clubEvent.getAttendanceList().isEmpty()}">
 <thead>
@@ -105,13 +105,13 @@
 </div>
 </div>
 
-
-
-
-<div class="EventAttendance-barchart"></div>
-
-
 </div>
+
+
+<div class="EventAttendance-barchart" th:if="!${clubEvent.getAttendanceList().isEmpty()}"></div>
+
+
+
 
 </body>
 </html>

@@ -26,7 +26,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
+    <nav class= "navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" th:href="@{'/'}">Sport Club</a>
@@ -69,10 +69,11 @@
                 <li sec:authorize="hasRole('ADMIN')">
                     <a th:href="@{'/user/registerMemberForm'}">Register A Club Member </a>
                 </li>
-
+            </ul>
+<ul class="nav navbar-nav navbar-right">
                 <li sec:authorize="isAuthenticated()">
                     <a th:onclick="'return confirm(\'Are You Sure You Want To Log Out?\');'"
-                       th:href="@{'/logout'}">Log Out </a>
+                       th:href="@{'/logout'}"><span class="glyphicon glyphicon-log-out"></span>Log Out </a>
                 </li>
             </ul>
         </div>

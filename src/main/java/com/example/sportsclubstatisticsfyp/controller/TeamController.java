@@ -31,12 +31,7 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserController userController;
+
 
     @GetMapping("/addTeamForm")
     public ModelAndView displayAddTeamForm(Model model) {
@@ -100,13 +95,6 @@ public class TeamController {
         Team team = teamService.getTeamById(id);
 
         RegisterTeamDTOForm editTeamForm = teamService.editTeamEventForm(team);
-
-
-
-
-
-
-
         List<User> listOfAvailablePlayers=userService.getAvailablePlayers(team.getTeamMembers());
         List<User> listOfAvailableTrainers=userService.getAllTrainers();
 
@@ -122,15 +110,9 @@ public class TeamController {
 
     @PostMapping("/editTeam")
     public ModelAndView editTeam(@ModelAttribute("editTeamForm") RegisterTeamDTOForm editTeam,
-                                      Model model,
                                       RedirectAttributes redirectAttributes) {
 
-
-
-
         teamService.editTeam(editTeam);
-
-
         redirectAttributes.addFlashAttribute("successMessage", "Team has been updated");
         List<Team> listOfTeams=teamService.getAllTeams();
 
@@ -143,10 +125,6 @@ public class TeamController {
 
 
         teamService.createTeam(newTeam);
-
-
-
-
         redirectAttributes.addFlashAttribute("successMessage", "Team has been created");
         return new ModelAndView("redirect:/");
 

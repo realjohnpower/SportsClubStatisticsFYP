@@ -100,7 +100,7 @@ public class TeamEventController {
         teamEventService.goingToTeamEvent(teamEvent,user, attending);
         List<TeamEvent> listOfTeamEvents = teamEventService.getUsersTeamEvents(user.getListOfTeams());
         redirectAttributes.addFlashAttribute("successMessage", "Team event attendance recorded");
-        return new ModelAndView("redirect:/teams/viewTeamEvents", "userTeamEvents", listOfTeamEvents );
+        return new ModelAndView("redirect:/teamEvents/viewUsersTeamEvents", "userTeamEvents", listOfTeamEvents );
 
     }
 
@@ -123,7 +123,8 @@ public class TeamEventController {
 
         String jsonTeamEventAttendanceString = objectMapper.writeValueAsString(eventAttendanceMap);
         model.addAttribute("teamEventAttendanceStats", jsonTeamEventAttendanceString);
-
+        model.addAttribute("notAttendingCount",notAttendingCount);
+        model.addAttribute("attendingCount",attendingCount);
 
         return new ModelAndView("teamEventDrillDown", "teamEvent", teamEvent );
 

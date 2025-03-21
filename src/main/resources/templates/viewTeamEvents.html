@@ -5,8 +5,8 @@
 </div>
 <body>
 <h2> Team Events</h2>
-<div th:if="${message}" class="successMessage">
-  <p th:text="${message}"> </p>
+<div th:if="${successMessage}" class="successMessage">
+  <h3 th:text="${successMessage}"> </h3>
 </div>
 
 <h2 th:if="${userTeamEvents.isEmpty()}">
@@ -35,6 +35,7 @@
     <th sec:authorize="hasRole('TRAINER')"> Edit </th>
     <th sec:authorize="hasRole('TRAINER')"> Add Team Session Stats </th>
     <th sec:authorize="hasAnyRole('TRAINER','PLAYER')"> View Team Session Stats </th>
+    <th sec:authorize="hasRole('TRAINER')"> Remove </th>
 
   </tr>
 
@@ -50,7 +51,7 @@
     </td>
     <td th:text="${teamEvent.getEventDescription()}"></td>
     <td th:text="${teamEvent.getLocation()}"></td>
-    <td th:text="${teamEvent.getStartDate()}"></td>
+    <td th:text="${#temporals.format(teamEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"></td>
     <td th:text="${teamEvent.getTeam().getTeamName()}"></td>
 
 
@@ -64,7 +65,7 @@
     <td sec:authorize="hasAnyRole('TRAINER','PLAYER')"> <a th:href="'/teamEvents/viewTeamSessionStats/'+${teamEvent.getTeamEventId()}"> <button>ViewTeam Session Stats</button></a> </td>
     <td sec:authorize="hasRole('TRAINER')">
       <a th:href="'/teamEvents/removeTeamEvent/'+${teamEvent.getTeamEventId()}" >
-        <button th:onclick="'return confirm(\'Are You Sure You Want To Delete This Team Event\');'">Remove</button></a> </td>
+        <button class="removeButton" th:onclick="'return confirm(\'Are You Sure You Want To Delete This Team Event\');'">Remove</button></a> </td>
   </tr>
 
 

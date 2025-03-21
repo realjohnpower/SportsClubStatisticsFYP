@@ -21,8 +21,7 @@ import java.util.*;
 public class PlayerPhysicalStatsService {
 
 
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private PlayerPhysicalStatsRepository playerPhysicalStatsRepository;
 

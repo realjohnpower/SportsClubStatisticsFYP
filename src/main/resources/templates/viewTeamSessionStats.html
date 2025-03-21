@@ -4,7 +4,7 @@
 
 </div>
 
-<script th:inline="javascript">
+<script th:inline="javascript" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
 
     window.onload = function() {
 
@@ -23,14 +23,18 @@
 <body>
 <h1 th:text="${teamEvent.getEventName()}+' Session Stats'" ></h1>
 
+<div th:if="${successMessage}" class="successMessage">
+    <h3 th:text="${successMessage}"> </h3>
+</div>
+
+
 <div class="centerButton">
     <a th:href="@{'/api/v1/teamSessionStats/'+${teamEvent.getTeamEventId()}}">
         <button>Download PDF</button>
     </a>
 </div>
-<div th:if="${successMessage}">
-    <h3 th:text="${successMessage}"></h3>
-</div>
+
+
 <h2     th:if="${teamEvent.getListOfPlayerSessionsStats().isEmpty()}"
         th:text="${teamEvent.getEventName()}+' Session Stats has not been recorded yet'" ></h2>
 
@@ -63,13 +67,13 @@
         <td  th:text="${playerSessionStats.getPlayer().getFirstName()}+' '+
             ${playerSessionStats.getPlayer().getLastName()}"></td>
 
-        <td th:text="${playerSessionStats.getRestingBpm()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerSessionStats.getRestingBpm(), 2, 2)}"></td>
 
-        <td th:text="${playerSessionStats.getAverageBpm()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerSessionStats.getAverageBpm(), 2, 2)}"></td>
 
-        <td th:text="${playerSessionStats.getMaxBpm()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerSessionStats.getMaxBpm(), 2, 2)}"></td>
 
-        <td th:text="${playerSessionStats.getCaloriesBurned()}"></td>
+        <td th:text="${#numbers.formatDecimal(playerSessionStats.getCaloriesBurned(), 2, 2)}"></td>
 
 
 
@@ -86,10 +90,13 @@
 
 <a th:href="'/teamEvents/viewUsersTeamEvents'">Back To Team Events </a>
 
-<button th:onclick="updateTeamStatsChartData([[${tenHighestMaxBPM}]],'Max BPM')">Max BPM</button>
-<button th:onclick="updateTeamStatsChartData([[${tehHighestAverageBPM}]],'Average BPM')">Average BPM</button>
-<button th:onclick="updateTeamStatsChartData([[${tenHighestRestingBPM}]],'Resting BPM')">Resting BPM</button>
-<button th:onclick="updateTeamStatsChartData([[${tenHighestCaloriesBurned}]],'Calories Burned')">Calories Burned</button>
+<div class="graph-button-container" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+<button class="graph-button" th:onclick="updateTeamStatsChartData([[${tenHighestMaxBPM}]],'Max BPM')">Max BPM</button>
+<button class="graph-button" th:onclick="updateTeamStatsChartData([[${tehHighestAverageBPM}]],'Average BPM')">Average BPM</button>
+<button class="graph-button" th:onclick="updateTeamStatsChartData([[${tenHighestRestingBPM}]],'Resting BPM')">Resting BPM</button>
+<button class="graph-button" th:onclick="updateTeamStatsChartData([[${tenHighestCaloriesBurned}]],'Calories Burned')">Calories Burned</button>
+</div>
+
 <div id ="team-event-stats-barchart">
 
 </div>

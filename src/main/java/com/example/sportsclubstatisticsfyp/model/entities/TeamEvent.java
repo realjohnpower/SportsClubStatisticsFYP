@@ -2,6 +2,7 @@ package com.example.sportsclubstatisticsfyp.model.entities;
 
 import jakarta.persistence.*;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -34,6 +35,7 @@ public class TeamEvent implements Serializable {
         @Basic(optional = false)
         @Column(name = "start_date")
         @Temporal(TemporalType.TIMESTAMP)
+        @DateTimeFormat(pattern="dd/MM/yyyy HH:mm")
         private LocalDateTime startDate;
 
 
