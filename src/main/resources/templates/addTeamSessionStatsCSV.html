@@ -1,22 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
 
 
-    <h2>Add Team Session Stats</h2>
+    <h1>Upload Team Session Stats CSV File</h1>
 
 
 
     <form th:action="@{/teamEvents/createTeamSessionStatsFromCSVFile/{id}(id=${teamEvent.teamEventId})}" enctype="multipart/form-data"  method="post" >
-<h2 style="text-align: center"> Upload CSV File Below</h2>
+
+    <h2 style="text-align: center"> Upload CSV File Below</h2>
 
         <input type="file" name = "file" accept=".csv"/>
+
         <div class="formButtons">
             <input type="submit" id="submitButton" value="Add Team Session Stats">
         </div>
+
     </form>
 
 

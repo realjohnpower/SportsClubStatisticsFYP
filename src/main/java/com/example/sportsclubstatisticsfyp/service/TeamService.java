@@ -1,21 +1,16 @@
 package com.example.sportsclubstatisticsfyp.service;
 
 import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamDTOForm;
-import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamEventDTOForm;
-import com.example.sportsclubstatisticsfyp.model.entities.ClubEvents;
 
 import com.example.sportsclubstatisticsfyp.model.entities.Team;
-import com.example.sportsclubstatisticsfyp.model.entities.TeamEvent;
 import com.example.sportsclubstatisticsfyp.model.entities.User;
-import com.example.sportsclubstatisticsfyp.model.repositories.TeamRepository;
-import com.example.sportsclubstatisticsfyp.model.repositories.UserRepository;
+import com.example.sportsclubstatisticsfyp.repositories.TeamEventRepository;
+import com.example.sportsclubstatisticsfyp.repositories.TeamRepository;
+import com.example.sportsclubstatisticsfyp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TeamService {
@@ -23,6 +18,9 @@ public class TeamService {
     private TeamRepository teamRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TeamEventRepository teamEventRepository;
 
     public Team createTeam(RegisterTeamDTOForm newTeam){
 
@@ -36,6 +34,7 @@ public class TeamService {
             User teamMember = userRepository.getById(teamMemberId);
             team.getTeamMembers().add(teamMember);
         }
+
 
         return teamRepository.save(team);
     }
@@ -68,6 +67,11 @@ public class TeamService {
         team.getTeamMembers().add(teamMember);
          teamRepository.save(team);
 
+    }
+
+    public void removeTeam(Team team){
+
+        teamRepository.delete(team);
     }
 
     public void removeTeamMember(int teamID, int userID){

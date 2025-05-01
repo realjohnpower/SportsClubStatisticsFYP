@@ -2,13 +2,16 @@
 
 function drawEventStatsBarChart(data) {
 
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
 
-    // Set Dimensions
+
+    // Setting the dimensions for the graph
     var  margin = {top: 50, right: 30, bottom: 50, left: 60},
-        width = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        width = 800 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
 
-    // Create SVG Container
+    // Creating an svg container and appending it to event attendance barchart div.
     var svg = d3.select(".EventAttendance-barchart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -16,39 +19,44 @@ function drawEventStatsBarChart(data) {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // X Scale (Categorical)
+    //  Creating the X-axis scale for the bar graph
     var x = d3.scaleBand()
         .domain(data.map(d => d.category))
         .range([0, width])
         .padding(0.2);
 
-    // Y Scale (Linear)
+    // Creating the Y-axis scale for the bar graph
     var y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.value)])
-        .nice()
         .range([height, 0]);
 
-    // Add X Axis
+    // Adding the x-axis to the bar graph
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(x));
 
-    // Add Y Axis
+    // Adding the y-axis to the bar graph
     svg.append("g")
         .call(d3.axisLeft(y));
 
-    // Add Bars
+    // Creating Bars for the bar graph according to the data passed in
     svg.selectAll("rect")
         .data(data)
-        .enter()
-        .append("rect")
+        .join("rect")
         .attr("x", d => x(d.category))
         .attr("y", d => y(d.value))
         .attr("width", x.bandwidth())
         .attr("height", d => height - y(d.value))
-        .attr("fill", "#69b3a2");
+        .attr("fill", "#1f77b4")
+        .on("mouseover", (event, d) => {
+            tooltip.style("opacity", 1)
+                .html(`<strong> ${d.category}</strong><br>Value: ${d.value}`)
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY + 15) + "px");
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
 
-    // Add Chart Title
+    // Adding the chart title to the bar graph
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", -20)
@@ -57,7 +65,8 @@ function drawEventStatsBarChart(data) {
         .style("font-weight", "bold")
         .text("Distribution Of Club Event Attendance");
 
-    // Add X Axis Label
+    // Adding the x-axis label to the bar graph
+
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", height + 40)
@@ -65,7 +74,7 @@ function drawEventStatsBarChart(data) {
         .style("font-size", "14px")
         .text("Attendance Recorded By Users");
 
-    // Add Y Axis Label
+    // Adding the  y-axis label to the bar graph
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)

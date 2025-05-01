@@ -1,4 +1,4 @@
-package com.example.sportsclubstatisticsfyp.controller.RestControllers;
+package com.example.sportsclubstatisticsfyp.RestControllers;
 
 import com.example.sportsclubstatisticsfyp.model.entities.TeamEvent;
 import com.example.sportsclubstatisticsfyp.service.TeamEventService;
@@ -9,28 +9,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/teamSessionStats")
-public class TeamEventStatsPDFController {
+public class TeamSessionStatsPDFRestController {
     @Autowired
     private TeamEventService teamEventService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getTeamEventStatsPDF(@PathVariable int id) {
+    public ResponseEntity<?> getTeamEventStatsPDF(@PathVariable int id) {
         TeamEvent teamEvent = teamEventService.getTeamEventById(id);
         try {
-            byte[] pdfBytes = teamEventService.generateTeamSessionStatsPDF(teamEvent);
+            ByteArrayOutputStream file= teamEventService.generateTeamSessionStatsPDF(teamEvent);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDisposition(ContentDisposition.inline().filename(teamEvent.getTeamEventId() + ".pdf").build());
 
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+            return new ResponseEntity<>(file.toByteArray(), headers, HttpStatus.OK);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
     }
 }
+

@@ -1,10 +1,10 @@
 form {
     width: 80%;
     margin: 20px auto;
-    background-color: #fff; /* White background for form */
-    padding: 20px; /* Padding for form */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .button-link, .button-link:hover, input[type="submit"]{
     color: white;
@@ -13,20 +13,24 @@ form {
 
 h1,h2, .ticketButtons, .formButtons{
     text-align: center;
+}
 
+h1{
+    margin-top: 70px;
+    margin-bottom: 50px;
 }
 li a{
     font-size: 20px;
     color: white;
 }
 label {
-    display: block; /* Block display for labels */
-    margin: 10px 0 5px; /* Margin for spacing */
+    display: block;
+    margin: 10px 0 5px;
 }
-.removeButton{
+.redButton{
     background-color: red;
 }
-.removeButton:hover{
+.redButton:hover{
     background-color: darkred;
 }
 .indexButton{
@@ -40,53 +44,64 @@ label {
 }
 input[type="number"], input[type="text"] , input[type="email"], input[type="datetime-local"]
 ,input[type="date"], textarea, select{
-    width: calc(100% - 22px); /* Full width minus padding */
-    padding: 10px; /* Padding for input fields */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 4px; /* Rounded corners */
-    box-sizing: border-box; /* Include padding in width */
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
+input[type="file"]{
 
+}
 button, input[type="submit"] {
-    background-color: #28a745; /* Green background */
-    color: white; /* White text */
-    padding: 10px 15px; /* Padding for button */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s;
-    /* Smooth transition */
+
 }
 
 button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838;
 }
 
 .centerButton{
     text-align: center;
     margin: 20px;
+    font-size: 20px;
 }
 .graph-button-container {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
+    justify-content: center;
+    align-items: center;
 
 }
+
 #team-event-stats-barchart,
 #physical-stats-line-chart,
 #user-registered-line-chart,
 .EventAttendance-barchart
 {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
+    justify-content: center;
+    align-items: center;
 }
 .graph-button{
     margin-left: 25px;
     margin-right: 25px;
+    width: 300px;
+    font-size: 20px;
+}
+
+.formButtons{
+    margin:20px;
+    font-size: 20px;
 }
 .successMessage{
-   font-size: medium;
+   font-size: 20px;
    text-align: center;
     color: green;
 }
@@ -100,14 +115,21 @@ button:hover {
 
 
 
-.scroll-table{height:auto; max-height:300px; overflow-y:scroll; display:block; width:100%;}
+.scroll-table{
+    height:auto;
+    max-height:400px;
+   overflow-y: scroll;
+    display:block;
+
+}
 
 .chart-container {
-    display: flex; /* Aligns graphs horizontally */
-    justify-content: space-around; /* Even spacing */
+    display: flex;
+    justify-content: space-around;
 }
 .chart {
-    width: 50%; /* Each graph takes half of the space */
+    width: 50%;
+    margin: 40px;
 }
 #user-registered-line-chart{
     width: 100%;
@@ -120,8 +142,32 @@ thead {
 
     top:0;
     position: sticky;
-    background-color: white;
+    background-color: #E0DBDB;
 
+
+}
+.event-info-details{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+
+}
+.event-info-label{
+    background-color: #e1e1d0;
+}
+.event-info-details td{
+    border: 1px solid black;
+    padding: 10px;
+    border-collapse: collapse;
+}
+.session-averages-container{
+    display:flex;
+    justify-content: center;
+    gap: 200px;
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 40px;
+    margin-top: 40px;
 }
 
 
@@ -144,9 +190,15 @@ thead {
     grid-template-columns:repeat(12,8.3%)
 }
 
-td{
+td,th{
     font-size: 20px;
 }
 
+.tooltip{
+    position: absolute;
+    background-color: #fff;
+    padding: 6px;
+    pointer-events: none;
 
+}
 

@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
+<h1> Add Team Session</h1>
 <form th:action="@{/teamEvents/addTeamEvent}" th:object="${newTeamEventForm}" method="post">
 
     <div>
-        <label for="teamEventName">Team Event Name:</label>
+        <label for="teamEventName">Team Session Name:</label>
         <input type="text" id="teamEventName" name="teamEventName"  th:field="*{eventName}" />
 
     </div>
 
+
     <div>
-        <label for="teamEventName">Team Event Description:</label>
-        <input type="text" id="teamEventDescription" name="teamEventDescription"  th:field="*{eventDescription}" />
+        <label for="teamEventDescription">Team Session Description:</label>
+        <textarea id="teamEventDescription" name="teamEventDescription"    th:field="*{eventDescription}" >
+    </textarea>
 
     </div>
 
     <div>
-        <label for="teamEventLocation">Team Event Location:</label>
+        <label for="teamEventLocation">Team Session Location:</label>
         <textarea id="teamEventLocation" name="teamEventLocation"  th:field="*{location}" ></textarea>
 
     </div>
@@ -39,11 +42,8 @@
 
     </div>
 
-
-
-
     <div class="formButtons">
-        <button type="submit">Add Team Event</button>
+        <button type="submit">Add Team Session</button>
     </div>
 </form>
 

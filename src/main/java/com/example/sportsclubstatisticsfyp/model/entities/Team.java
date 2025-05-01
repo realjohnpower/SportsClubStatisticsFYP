@@ -2,21 +2,17 @@ package com.example.sportsclubstatisticsfyp.model.entities;
 
 import jakarta.persistence.*;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
+
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 
 @Entity
 @Table(name = "teams")
 public class Team implements Serializable {
-
-
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +38,7 @@ public class Team implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> teamMembers = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team", orphanRemoval = true)
     @ToString.Exclude
     private Set<TeamEvent> listOfTeamEvents = new HashSet<>();
 

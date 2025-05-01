@@ -20,9 +20,9 @@ import java.util.Set;
 
         private String role;
 
-        //The inverse side of the many-to-many relationship with the Customer entity
-        //Each Role can be associated with multiple Customers, and each Customer can have multiple Roles.
-        //Using a SEt is imortat here so that each customer is unique within the collection, preventing duplicates.
+        //The inverse side of the many-to-many relationship with the User entity
+        //Each Role can be associated with multiple Users, and each User can have multiple Roles.
+        //A set is used here so that each User is unique within the collection and there is no duplicates.
         @ManyToMany(mappedBy = "roles")
         private Set<User> users;
 

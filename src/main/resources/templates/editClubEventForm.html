@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 
 <body>
+<h1> Edit Club Event </h1>
 <form th:action="@{/clubEvents/editClubEvent}" th:object="${clubEvent}" method="post">
 
   <div>
@@ -14,7 +15,7 @@
   </div>
 
   <div>
-    <label for="eventName">Event Name:</label>
+    <label for="eventName">Session Name:</label>
     <input type="text" id="eventName" name="eventName"  th:value="${clubEvent.getClubEventName()}" th:field="*{clubEventName}" />
 
   </div>

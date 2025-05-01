@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
-<script th:inline="javascript" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+<script th:inline="javascript" th:if="!${teamEvent.getAttendanceList().isEmpty()}">
 
     window.onload = function() {
 
         let teamEventAttendanceStats=JSON.parse([[${teamEventAttendanceStats}]]);
-        console.log(teamEventAttendanceStats.attendingCount);
         drawEventStatsBarChart(teamEventAttendanceStats);
 
     };
@@ -17,49 +16,53 @@
 </script>
 
 <body>
+
 <h1 th:text="${teamEvent.getEventName()}+' Details'" ></h1>
 
-<p><strong>Event Description :</strong> <span th:text="${teamEvent.getEventDescription()}"/><br></p>
-<p><strong>Event Location :</strong> <span th:text="${teamEvent.getLocation()}"/><br></p>
-<p> <strong> Event Start Date: </strong> <span th:text="${#temporals.format(teamEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"/><br></p>
+<table class="event-info-details">
+<tr>
 
+<td class="event-info-label"><strong>Event Description :</strong></td> <td th:text="${teamEvent.getEventDescription()}"/>
+</tr>
+    <tr>
+<td class="event-info-label"><strong>Event Location :</strong></td> <td th:text="${teamEvent.getLocation()}"/>
+    </tr>
+    <tr>
+        <td class="event-info-label"><strong> Event Start Date: </strong></td> <td th:text="${#temporals.format(teamEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"/>
+    </tr>
+</table>
+
+<div class="centerButton">
+    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">
+        <button>Back To Teams Events</button>
+    </a>
+</div>
+
+<h2 th:if="${teamEvent.getAttendanceList().isEmpty()}">No Attendance Recorded For This Team Session</h2>
 
 <div class="grid-container">
 
-    <div class="left-table" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+    <div class="left-table" th:if="!${teamEvent.getAttendanceList().isEmpty()}">
 <h2 th:text="'Going: '+${attendingCount}"/>
 <div class="scroll-table">
+
 <table class="table table-hover" th:unless="${teamEvent.getAttendanceList().isEmpty()}">
 <thead>
     <tr>
-
-
         <th> Name</th>
         <th>Email</th>
-
-
-
     </tr>
 
 </thead>
 
     <tr th:each="teamEventAttendance: ${teamEvent.getAttendanceList()}">
 
-
-
-
-
         <td th:if="${teamEventAttendance.getAttendance()==true}"
             th:text="${teamEventAttendance.getTeamMember().getFirstName()}+' '+
             ${teamEventAttendance.getTeamMember().getLastName()}"></td>
+
         <td th:if="${teamEventAttendance.getAttendance()==true}"
             th:text="${teamEventAttendance.getTeamMember().getEmail()}"></td>
-
-
-
-
-
-
 
     </tr>
 
@@ -67,41 +70,30 @@
 </table>
 </div>
 </div>
-    <div class="right-table" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+
+    <div class="right-table" th:if="!${teamEvent.getAttendanceList().isEmpty()}">
+
     <h2 th:text="'Not Going: '+${notAttendingCount}"/>
+
 <div class="scroll-table">
 
 
 <table class="table table-hover" th:unless="${teamEvent.getAttendanceList().isEmpty()}">
 <thead>
     <tr>
-
-
         <th> Name</th>
         <th>Email</th>
-
-
-
     </tr>
 </thead>
 
     <tr th:each="teamEventAttendance: ${teamEvent.getAttendanceList()}">
 
-
-
-
-
         <td th:if="${teamEventAttendance.getAttendance()==false}"
             th:text="${teamEventAttendance.getTeamMember().getFirstName()}+' '+
             ${teamEventAttendance.getTeamMember().getLastName()}"></td>
+
         <td th:if="${teamEventAttendance.getAttendance()==false}"
             th:text="${teamEventAttendance.getTeamMember().getEmail()}"></td>
-
-
-
-
-
-
 
     </tr>
 
@@ -110,14 +102,15 @@
 
 
 </div>
-
     </div>
 
-<div class="EventAttendance-barchart" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+
 
 </div>
 
-<a th:href="'/teamEvents/viewUsersTeamEvents'">Back To Team Events </a>
+<div class="EventAttendance-barchart" th:if="!${teamEvent.getAttendanceList().isEmpty()}">
+
+</div>
 
 
 </body>

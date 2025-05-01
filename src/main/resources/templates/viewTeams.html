@@ -4,9 +4,11 @@
 
 </div>
 <body>
-<h2> Teams </h2>
-<div th:if="${message}" class="successMessage">
-  <p th:text="${message}"> </p>
+
+<h1> Teams </h1>
+
+<div th:if="${successMessage}" class="successMessage">
+  <p th:text="${successMessage}"> </p>
 </div>
 
 <h2 th:if="${teamList.isEmpty()}">
@@ -22,13 +24,13 @@
 <div class="scroll-table">
 <table th:unless="${teamList.isEmpty()}" class="table table-hover" >
 <thead>
-  <tr>
 
+  <tr>
 
     <th>Team Name</th>
     <th>Trainer</th>
     <th sec:authorize="hasRole('ADMIN')"> Edit </th>
-
+    <th sec:authorize="hasRole('ADMIN')"> Remove </th>
 
   </tr>
   </thead>
@@ -36,20 +38,17 @@
   <tbody>
   <tr th:each="team: ${teamList}">
 
-
-
     <td>
       <a th:href="'/teams/teamDrillDown/'+${team.getTeam_Id()}">
         <span th:text="${team.getTeamName()}"/>
       </a>
     </td>
     <td th:text="${team.getTrainer().getFirstName()}+' '+${team.getTrainer().getLastName()}"></td>
-
-
-
-
-
     <td sec:authorize="hasRole('ADMIN')"> <a th:href="'/teams/editTeamForm/'+${team.getTeam_Id()}"> <button>Edit</button></a> </td>
+    <td sec:authorize="hasRole('ADMIN')"> <a th:href="'/teams/removeTeam/'+${team.getTeam_Id()}">
+      <button class="redButton" th:onclick="'return confirm(\'Are You Sure You Want To Delete This Team?\');'">Remove</button>
+    </a>
+    </td>
 
   </tr>
   </tbody>

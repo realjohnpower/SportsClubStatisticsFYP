@@ -7,9 +7,15 @@
 <body>
 <h1 th:text="${team.getTeamName()}+' Details'" ></h1>
 
-<p><strong>Trainer:</strong> <span th:text="${team.getTrainer().getFirstName()}+' '+${team.getTrainer().getLastName()}"/><br></p>
 
 
+<table class="event-info-details">
+    <tr>
+
+        <td class="event-info-label"><strong>Trainer :</strong></td> <td th:text="${team.getTrainer().getFirstName()}+' '+${team.getTrainer().getLastName()}"/>
+    </tr>
+
+</table>
 
 
 <h2> Team Members </h2>
@@ -18,11 +24,10 @@
 <thead>
     <tr>
 
-
         <th> Name</th>
         <th>Email</th>
-
-
+        <th sec:authorize="hasRole('TRAINER')">View Player Physical Stats</th>
+        <th sec:authorize="hasRole('TRAINER')"> Add Player Physical Stats</th>
 
     </tr>
 
@@ -30,18 +35,13 @@
 
     <tr th:each="teamMembers: ${team.getTeamMembers()}">
 
-
-
-
-
-
         <td   th:text="${teamMembers.getFirstName()}+' '+
             ${teamMembers.getLastName()}"></td>
 
         <td th:text="${teamMembers.getEmail()}"></td>
 
         <td>
-            <a th:href="'/playerPhysicalStats/viewAllPlayerPhysicalStats/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
+            <a sec:authorize="hasRole('TRAINER')" th:href="'/playerPhysicalStats/viewAllPlayerPhysicalStats/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
                 <button>
                     View Physical Stats
                 </button>
@@ -50,29 +50,31 @@
         </td>
 
         <td>
-            <a th:href="'/playerPhysicalStats/playerPhysicalStatsForm/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
-
-
+            <a sec:authorize="hasRole('TRAINER')" th:href="'/playerPhysicalStats/playerPhysicalStatsForm/'+${teamMembers.getUserId()}+'/'+${team.getTeam_Id()}">
                 <button> Add Physical Stats </button>
-
-
             </a>
         </td>
-
-
-
-
-
-
     </tr>
-
-
 </table>
 
 </div>
+<div class="centerButton" sec:authorize="hasRole('TRAINER')">
+<a th:href="'/teams/viewTrainerTeams'">
+   <button> Back To Teams </button>
+</a>
+</div>
 
-<a th:href="'/teams/viewTeams'">Back To Teams </a>
+<div class="centerButton" sec:authorize="hasRole('PLAYER')">
+    <a th:href="'/teams/viewPlayerTeams'">
+        <button> Back To Teams </button>
+    </a>
+</div>
 
+<div class="centerButton" sec:authorize="hasRole('ADMIN')">
+    <a th:href="'/teams/viewTeams'">
+        <button> Back To Teams </button>
+    </a>
+</div>
 
 </body>
 </html>

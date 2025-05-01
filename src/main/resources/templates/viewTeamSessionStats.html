@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
@@ -8,15 +8,8 @@
 
     window.onload = function() {
 
-
         let jsonString=[[${tenHighestMaxBPM}]];
-
-        console.log([[${tenHighestMaxBPM}]]);
         drawTeamStatisticsChart(jsonString,"Max BPM");
-
-
-
-
 
     };
 </script>
@@ -28,9 +21,9 @@
 </div>
 
 
-<div class="centerButton">
+<div class="centerButton" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
     <a th:href="@{'/api/v1/teamSessionStats/'+${teamEvent.getTeamEventId()}}">
-        <button>Download PDF</button>
+        <button>Export To PDF</button>
     </a>
 </div>
 
@@ -44,25 +37,16 @@
 <table class="table table-hover" th:unless="${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
 <thead>
     <tr>
-
-
         <th> Name</th>
         <th>Resting BPM</th>
         <th>Average BPM</th>
         <th>Max BPM</th>
         <th>Calories Burned</th>
-
-
     </tr>
 
 </thead>
 
     <tr th:each="playerSessionStats: ${teamEvent.getListOfPlayerSessionsStats()}">
-
-
-
-
-
 
         <td  th:text="${playerSessionStats.getPlayer().getFirstName()}+' '+
             ${playerSessionStats.getPlayer().getLastName()}"></td>
@@ -75,20 +59,49 @@
 
         <td th:text="${#numbers.formatDecimal(playerSessionStats.getCaloriesBurned(), 2, 2)}"></td>
 
-
-
-
-
-
     </tr>
 
 
 </table>
 </div>
 
+<h2     th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+    Average Of Each Statistic Recorded In This Session
+</h2>
 
+<div class ="session-averages-container" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
+    <div class ="stats-averages">
+        <strong>Max BPM Average</strong><br>
+        <span th:text="${#numbers.formatDecimal(maxBpmAverage,2,2)}">
 
-<a th:href="'/teamEvents/viewUsersTeamEvents'">Back To Team Events </a>
+        </span>
+    </div>
+    <div class ="stats-averages">
+        <strong>Resting BPM</strong> <br>
+        <span th:text="${#numbers.formatDecimal(restingBpmAverage,2,2)}">
+
+        </span>
+    </div>
+    <div class ="stats-averages">
+        <strong>Average BPM</strong><br>
+        <span th:text="${#numbers.formatDecimal(averageBpmAverage,2,2)}">
+
+        </span>
+    </div>
+    <div class ="stats-averages">
+        <strong>Calories Burned</strong><br>
+        <span th:text="${#numbers.formatDecimal(caloriesBurnedAverage,2,2)}">
+
+        </span>
+    </div>
+
+</div>
+
+<div class="centerButton">
+    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">
+        <button>Back To Teams Events</button>
+    </a>
+</div>
 
 <div class="graph-button-container" th:if="!${teamEvent.getListOfPlayerSessionsStats().isEmpty()}">
 <button class="graph-button" th:onclick="updateTeamStatsChartData([[${tenHighestMaxBPM}]],'Max BPM')">Max BPM</button>

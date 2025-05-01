@@ -1,12 +1,17 @@
 function displayUserRegisteredLineChart(data) {
-    var margin = { top: 50, right: 30, bottom: 50, left: 60 },
-        width = 800 - margin.left - margin.right,
+    //Setting dimensions for the line graph.
+    var margin = { top: 50, right: 30, bottom: 70, left: 60 },
+        width = 1200 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    // Clear previous SVG if any
-    d3.select("#user-registered-line-chart").select("svg").remove();
 
-    // Append SVG
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+
+
+
+
+    // Appending svg to the user-registered-line-chart div
     var svg = d3.select("#user-registered-line-chart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -14,39 +19,38 @@ function displayUserRegisteredLineChart(data) {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Parse date
+    // Parsing date values to display only year and month
     var parseDate = d3.timeParse("%Y-%m");
     data.forEach(d => d.date = parseDate(d.date));
 
-    // Scales
+    // Creating x-axis scales for the line graph
     var x = d3.scaleTime()
         .domain(d3.extent(data, d => d.date))
         .range([0, width]);
-
+    // Creating y-axis scales for the line graph
     var y = d3.scaleLinear()
         .domain([0, d3.max(data, d => d.count)])
         .nice()
         .range([height, 0]);
 
-    // X Axis
+    // Adding X axis to the line graph
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).ticks(d3.timeMonth.every(1)).tickFormat(d3.timeFormat("%b %Y")))
+        .call(d3.axisBottom(x).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b %Y")))
         .selectAll("text")
-        .attr("transform", "rotate(-30)")
+        .attr("transform", "rotate(-45)")
         .style("text-anchor", "end");
 
-    // Y Axis
+    // Adding Y axis to the line graph
     svg.append("g")
         .call(d3.axisLeft(y));
 
-    // Line Generator
+    // Creating the line for the line graph
     var line = d3.line()
         .x(d => x(d.date))
         .y(d => y(d.count))
-        .curve(d3.curveMonotoneX);  // Smooth line
 
-    // Append Line Path
+    // Adding the line path to the line graph
     svg.append("path")
         .datum(data)
         .attr("fill", "none")
@@ -54,39 +58,47 @@ function displayUserRegisteredLineChart(data) {
         .attr("stroke-width", 2)
         .attr("d", line);
 
-    // Add Data Points (Circles)
+const tooltipTimeFormat=d3.timeFormat("%B %Y");
+    // Adding circles for the line graph according to the data passed in
     svg.selectAll("circle")
         .data(data)
-        .enter()
-        .append("circle")
+        .join("circle")
         .attr("cx", d => x(d.date))
         .attr("cy", d => y(d.count))
         .attr("r", 5)
-        .attr("fill", "red");
+        .attr("fill", "red")
+        .on("mouseover", (event, d) => {
+            tooltip.style("opacity", 1)
+                .html(`<strong>Date: ${tooltipTimeFormat(d.date)}</strong><br>New Members Total: ${d.count}`)
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY + 15) + "px");
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0));
 
-    // Chart Title
+
+    //Adding chart title to the line graph
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", -20)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("font-weight", "bold")
-        .text("User Activity Over Time");
+        .text("Number of New Members Over The Past Six Months");
 
-    // X Label
+    // Adding X label to the line graph
     svg.append("text")
         .attr("x", width / 2)
-        .attr("y", height + 40)
+        .attr("y", height + 70)
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
-        .text("Time");
+        .text("Months");
 
-    // Y Label
+    // Adding Y label to the line graph
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("x", -height / 2)
         .attr("y", -40)
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
-        .text("Number of Users");
+        .text("Number of New Members");
 }

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
+<h1>Edit Team</h1>
 <form th:action="@{/teams/editTeam}" th:object="${editTeamForm}" method="post">
 
     <div>
@@ -18,9 +19,6 @@
         <input type="text" id="teamName" name="teamName" th:value="${editTeamForm.getTeamName()}" th:field="*{teamName}" />
 
     </div>
-
-
-
 
     <div>
         <label for="trainer">Trainer:</label>

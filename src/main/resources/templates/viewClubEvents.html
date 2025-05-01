@@ -4,7 +4,7 @@
 
 </div>
 <body>
-<h2> Club Events</h2>
+<h1> Club Events</h1>
 
 <div th:if="${successMessage}" class="successMessage">
   <h3 th:text="${successMessage}"> </h3>
@@ -15,7 +15,7 @@
 
 <div class="centerButton">
   <a th:href="@{'/clubEvents/addClubEventForm'}">
-    <button sec:authorize="hasRole('ADMIN')">Add A Club</button>
+    <button sec:authorize="hasRole('ADMIN')">Add A Club Event</button>
   </a>
 </div>
 
@@ -27,9 +27,7 @@
 <thead>
   <tr>
 
-
     <th>Event Name</th>
-    <th>Event Description</th>
     <th>Event Location</th>
     <th>Start Date And Time</th>
 
@@ -38,34 +36,30 @@
     <th sec:authorize="hasRole('ADMIN')"> Edit </th>
     <th sec:authorize="hasRole('ADMIN')"> Remove </th>
 
-
   </tr>
 
 </thead>
   <tr th:each="clubEvent: ${clubEventList}">
-
-
 
     <td>
       <a th:href="'/clubEvents/clubEventDrillDown/'+${clubEvent.getClubEventId()}">
         <span th:text="${clubEvent.getClubEventName()}"/>
       </a>
     </td>
-    <td th:text="${clubEvent.getClubEventDescription()}"></td>
+
     <td th:text="${clubEvent.getLocation()}"></td>
+
     <td th:text="${#temporals.format(clubEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"></td>
 
-
-
-
-
-
     <td> <a th:href="'/clubEvents/goingToClubEvent/'+${clubEvent.getClubEventId()}+'/true'"> <button>Going</button></a> </td>
-    <td> <a th:href="'/clubEvents/goingToClubEvent/'+${clubEvent.getClubEventId()}+'/false'"> <button>Not Going</button></a> </td>
+
+    <td> <a th:href="'/clubEvents/goingToClubEvent/'+${clubEvent.getClubEventId()}+'/false'"> <button class="redButton">Not Going</button></a> </td>
+
     <td sec:authorize="hasRole('ADMIN')"> <a th:href="'/clubEvents/editClubEventForm/'+${clubEvent.getClubEventId()}"> <button>Edit</button></a> </td>
+
     <td sec:authorize="hasRole('ADMIN')">
       <a th:href="'/clubEvents/removeClubEvent/'+${clubEvent.getClubEventId()}" >
-      <button th:onclick="'return confirm(\'Are You Sure You Want To Delete This Club Event\');'">Remove</button></a> </td>
+      <button th:onclick="'return confirm(\'Are You Sure You Want To Delete This Club Event?\');'" class="redButton">Remove</button></a> </td>
   </tr>
 
 

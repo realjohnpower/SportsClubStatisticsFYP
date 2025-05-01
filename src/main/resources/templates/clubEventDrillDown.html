@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
@@ -7,7 +7,6 @@
     window.onload = function() {
 
         let clubEventAttendanceStats=JSON.parse([[${clubEventAttendanceStats}]]);
-        console.log(clubEventAttendanceStats.attendingCount);
         drawEventStatsBarChart(clubEventAttendanceStats);
 
     };
@@ -17,48 +16,48 @@
 <body>
 <h1 th:text="${clubEvent.getClubEventName()}+' Details'" ></h1>
 
-<p><strong>Event Description :</strong> <span th:text="${clubEvent.getClubEventDescription()}"/><br></p>
-<p><strong>Event Location :</strong> <span th:text="${clubEvent.getLocation()}"/><br></p>
-<p> <strong> Event Start Date: </strong> <span th:text="${#temporals.format(clubEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"/><br></p>
+<table class="event-info-details">
+    <tr>
+        <td class="event-info-label"><strong>Event Description</strong></td> <td th:text="${clubEvent.getClubEventDescription()}"/>
+    </tr>
+    <tr>
+        <td class="event-info-label"><strong>Event Location</strong></td> <td th:text="${clubEvent.getLocation()}"/>
+    </tr>
+    <tr>
+        <td class="event-info-label"><strong> Event Start Date </strong></td> <td th:text="${#temporals.format(clubEvent.getStartDate(),'yyyy-MM-dd HH:mm')}"/>
+    </tr>
+</table>
 
+<h2 th:if="${clubEvent.getAttendanceList().isEmpty()}">No Attendance Recorded For This Club Event</h2>
+<div class="centerButton">
+    <a th:href="@{'/clubEvents/viewClubEvents'}">
+        <button>Back To Club Events</button>
+    </a>
+</div>
 
 <div class="grid-container">
 <div class="left-table" th:if="!${clubEvent.getAttendanceList().isEmpty()}">
+
     <h2 th:text="'Going: '+${attendingCount} "/>
+
 <div class="scroll-table">
 <table class="table table-hover" th:unless="${clubEvent.getAttendanceList().isEmpty()}">
 <thead>
     <tr>
-
-
         <th> Name</th>
         <th>Email</th>
-
-
-
     </tr>
-
 </thead>
     <tr th:each="clubEventAttendance: ${clubEvent.getAttendanceList()}">
-
-
-
-
 
         <td th:if="${clubEventAttendance.getAttendance()==true}"
             th:text="${clubEventAttendance.getClubMember().getFirstName()}+' '+
             ${clubEventAttendance.getClubMember().getLastName()}"></td>
+
         <td th:if="${clubEventAttendance.getAttendance()==true}"
             th:text="${clubEventAttendance.getClubMember().getEmail()}"></td>
 
-
-
-
-
-
-
     </tr>
-
 
 </table>
 </div>
@@ -70,36 +69,19 @@
 <table class="table table-hover" th:unless="${clubEvent.getAttendanceList().isEmpty()}">
 <thead>
     <tr>
-
-
         <th> Name</th>
         <th>Email</th>
-
-
-
     </tr>
 </thead>
 
     <tr th:each="clubEventAttendance: ${clubEvent.getAttendanceList()}">
-
-
-
-
-
         <td th:if="${clubEventAttendance.getAttendance()==false}"
             th:text="${clubEventAttendance.getClubMember().getFirstName()}+' '+
             ${clubEventAttendance.getClubMember().getLastName()}"></td>
+
         <td th:if="${clubEventAttendance.getAttendance()==false}"
             th:text="${clubEventAttendance.getClubMember().getEmail()}"></td>
-
-
-
-
-
-
-
     </tr>
-
 
 </table>
 </div>
@@ -109,9 +91,6 @@
 
 
 <div class="EventAttendance-barchart" th:if="!${clubEvent.getAttendanceList().isEmpty()}"></div>
-
-
-
 
 </body>
 </html>

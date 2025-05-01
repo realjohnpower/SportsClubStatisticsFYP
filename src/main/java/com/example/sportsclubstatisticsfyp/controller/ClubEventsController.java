@@ -1,17 +1,17 @@
 package com.example.sportsclubstatisticsfyp.controller;
 
-import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterMemberDTOForm;
+
 import com.example.sportsclubstatisticsfyp.model.entities.ClubEvents;
-import com.example.sportsclubstatisticsfyp.model.entities.Role;
+
 import com.example.sportsclubstatisticsfyp.model.entities.User;
 import com.example.sportsclubstatisticsfyp.service.ClubEventsService;
 import com.example.sportsclubstatisticsfyp.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -36,15 +36,12 @@ public class ClubEventsController {
     public ModelAndView displayaddClubEventForm(Model model) {
 
         ClubEvents newClubEvent = new ClubEvents();
-
-
         return new ModelAndView("addClubEventForm", "newClubEvent", newClubEvent );
 
     }
 
     @PostMapping("/addClubEvent")
     public ModelAndView addClubEvent(@ModelAttribute("newClubEvent") ClubEvents newClubEvent, RedirectAttributes redirectAttributes ) throws ParseException {
-
 
         clubEventsService.createClubEvent(newClubEvent);
         redirectAttributes.addFlashAttribute("successMessage", "Club Event has been created");
@@ -93,15 +90,9 @@ public class ClubEventsController {
                                       @PathVariable("clubEventId") int clubEventId,
                                       Model model ) {
 
-
-
         ClubEvents clubEvent = clubEventsService.getClubEventById(clubEventId);
         clubEventsService.removeClubEvent(clubEvent);
         List<ClubEvents> listOfClubEvents = clubEventsService.getAllClubEvents();
-
-
-
-
 
         redirectAttributes.addFlashAttribute("successMessage", "Club Event has been removed");
 
@@ -130,8 +121,6 @@ public class ClubEventsController {
     public ModelAndView editClubEventForm(@PathVariable("id") Integer id) {
 
         ClubEvents clubEvent = clubEventsService.getClubEventById(id);
-
-
         return new ModelAndView("editClubEventForm", "clubEvent", clubEvent );
 
     }

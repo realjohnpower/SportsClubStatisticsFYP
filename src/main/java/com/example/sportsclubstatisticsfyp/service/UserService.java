@@ -3,8 +3,8 @@ package com.example.sportsclubstatisticsfyp.service;
 import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterMemberDTOForm;
 import com.example.sportsclubstatisticsfyp.model.entities.Role;
 import com.example.sportsclubstatisticsfyp.model.entities.User;
-import com.example.sportsclubstatisticsfyp.model.repositories.RoleRepository;
-import com.example.sportsclubstatisticsfyp.model.repositories.UserRepository;
+import com.example.sportsclubstatisticsfyp.repositories.RoleRepository;
+import com.example.sportsclubstatisticsfyp.repositories.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.YearMonth;
@@ -32,10 +31,14 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    // This is Alan Ryan's code that he provided me with for setting up Spring Security
+    // This method gets the user instance from the email entered in the log in.
+    // Associated roles are then attatched to the user.
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        //retrieve a customer account from the DB by email address
+        //retrieve a user account from the DB by email address
         User member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Club member not found with email: " + email));
 
@@ -79,24 +82,23 @@ public class UserService implements UserDetailsService {
 
     public User getUserByEmail(String email) {
         Optional<User> member = userRepository.findByEmail(email);
-        if(member.isPresent())
-        {
+        if (member.isPresent()) {
             return member.get();
-        }else {
+        } else {
             return null;
         }
     }
 
-    public User createUser(RegisterMemberDTOForm member) throws ParseException {
+    public void createUser(RegisterMemberDTOForm member) throws ParseException {
 
-        User newClubMember=new User();
+        User newClubMember = new User();
         newClubMember.setFirstName(member.getFirstName());
         newClubMember.setLastName(member.getLastName());
         newClubMember.setDateOfBirth(member.getDateOfBirth());
         newClubMember.setPassword(member.getPassword());
         newClubMember.setEmail(member.getEmail());
 
-        for(Long roleId : member.getRoles()) {
+        for (Long roleId : member.getRoles()) {
             Role role = roleRepository.getById(roleId);
             newClubMember.getRoles().add(role);
         }
@@ -104,16 +106,16 @@ public class UserService implements UserDetailsService {
         newClubMember.setPassword(encoder.encode(member.getPassword()));
         newClubMember.setGender(member.getGender());
         newClubMember.setDateRegistered(LocalDate.now());
-        return userRepository.save(newClubMember);
+        userRepository.save(newClubMember);
     }
 
-    public List<User> getAllTrainers(){
+    public List<User> getAllTrainers() {
         List<User> users = userRepository.findAll();
         List<User> trainers = new ArrayList<>();
-        for(User user : users) {
+        for (User user : users) {
             Set<Role> userRoles = user.getRoles();
-            for(Role role : userRoles) {
-                if(role.getRole().equals("TRAINER")) {
+            for (Role role : userRoles) {
+                if (role.getRole().equals("TRAINER")) {
                     trainers.add(user);
                 }
             }
@@ -122,13 +124,13 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<User> getAllPlayers(){
+    public List<User> getAllPlayers() {
         List<User> users = userRepository.findAll();
         List<User> players = new ArrayList<>();
-        for(User user : users) {
+        for (User user : users) {
             Set<Role> userRoles = user.getRoles();
-            for(Role role : userRoles) {
-                if(role.getRole().equals("PLAYER")) {
+            for (Role role : userRoles) {
+                if (role.getRole().equals("PLAYER")) {
                     players.add(user);
                 }
             }
@@ -137,11 +139,11 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<User> getAvailablePlayers(Set<User> activeTeamMembers){
+    public List<User> getAvailablePlayers(Set<User> activeTeamMembers) {
         List<User> players = this.getAllPlayers();
         List<User> availablePlayers = new ArrayList<>();
-        for(User user : players) {
-            if(!activeTeamMembers.contains(user)) {
+        for (User user : players) {
+            if (!activeTeamMembers.contains(user)) {
                 availablePlayers.add(user);
             }
         }
@@ -149,51 +151,49 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User getUserById (Integer id){
+    public User getUserById(Integer id) {
         Optional<User> member = userRepository.findById(id);
-        if(member.isPresent())
-        {
+        if (member.isPresent()) {
             return member.get();
-        }else {
+        } else {
             return null;
         }
     }
-    public List<User> getAllMaleUsers(){
+
+    public List<User> getAllMaleUsers() {
         return userRepository.getAllMaleClubMembers();
     }
 
-    public List<User> getAllFemaleUsers(){
+    public List<User> getAllFemaleUsers() {
         return userRepository.getAllFemaleClubMembers();
     }
 
 
-    public Map<String,Integer> getAllMaleClubMembersByUserType() {
-        List<User> maleUsers=userRepository.getAllMaleClubMembers();
+    public Map<String, Integer> getAllMaleClubMembersByUserType() {
+        List<User> maleUsers = userRepository.getAllMaleClubMembers();
 
-        Integer allCount=0;
-        Integer adminCount =0;
-        Integer trainerCount =0;
-        Integer playerCount =0;
-        Integer clubMemberCount =0;
-        for(User maleUser : maleUsers) {
+        Integer allCount = 0;
+        Integer adminCount = 0;
+        Integer trainerCount = 0;
+        Integer playerCount = 0;
+        Integer clubMemberCount = 0;
+        for (User maleUser : maleUsers) {
             allCount++;
-            for(Role role : maleUser.getRoles()) {
-                if(role.getRole().equals("ADMIN")) {
+            for (Role role : maleUser.getRoles()) {
+                if (role.getRole().equals("ADMIN")) {
                     adminCount++;
-                }
-                else if(role.getRole().equals("TRAINER")) {
+                } else if (role.getRole().equals("TRAINER")) {
                     trainerCount++;
-                }
-                else if(role.getRole().equals("PLAYER")) {
+                } else if (role.getRole().equals("PLAYER")) {
                     playerCount++;
                 } else if (role.getRole().equals("CLUB MEMBER")) {
-                   clubMemberCount++;
+                    clubMemberCount++;
                 }
             }
 
 
         }
-        Map<String, Integer> membersCount= new HashMap<String, Integer>();
+        Map<String, Integer> membersCount = new HashMap<String, Integer>();
         membersCount.put("allUsersCount", allCount);
         membersCount.put("adminsCount", adminCount);
         membersCount.put("trainersCount", trainerCount);
@@ -205,23 +205,21 @@ public class UserService implements UserDetailsService {
 
     public Map<String, Integer> getAllFemaleClubMembersByUserType() {
 
-        List<User> femaleUsers=userRepository.getAllFemaleClubMembers();
+        List<User> femaleUsers = userRepository.getAllFemaleClubMembers();
 
-        Integer allCount=0;
-        Integer adminCount =0;
-        Integer trainerCount =0;
-        Integer playerCount =0;
-        Integer clubMemberCount =0;
-        for(User femaleUser : femaleUsers) {
+        Integer allCount = 0;
+        Integer adminCount = 0;
+        Integer trainerCount = 0;
+        Integer playerCount = 0;
+        Integer clubMemberCount = 0;
+        for (User femaleUser : femaleUsers) {
             allCount++;
-            for(Role role : femaleUser.getRoles()) {
-                if(role.getRole().equals("ADMIN")) {
+            for (Role role : femaleUser.getRoles()) {
+                if (role.getRole().equals("ADMIN")) {
                     adminCount++;
-                }
-                else if(role.getRole().equals("TRAINER")) {
+                } else if (role.getRole().equals("TRAINER")) {
                     trainerCount++;
-                }
-                else if(role.getRole().equals("PLAYER")) {
+                } else if (role.getRole().equals("PLAYER")) {
                     playerCount++;
                 } else if (role.getRole().equals("CLUB MEMBER")) {
                     clubMemberCount++;
@@ -230,7 +228,7 @@ public class UserService implements UserDetailsService {
 
 
         }
-        Map<String, Integer> membersCount= new HashMap<String, Integer>();
+        Map<String, Integer> membersCount = new HashMap<String, Integer>();
         membersCount.put("allUsersCount", allCount);
         membersCount.put("adminsCount", adminCount);
         membersCount.put("trainersCount", trainerCount);
@@ -241,37 +239,41 @@ public class UserService implements UserDetailsService {
 
 
     }
+
     public String getSixMonthsUserRegisterationStatus() throws JsonProcessingException {
         List<User> users = userRepository.findAll();
-        Map<YearMonth, Long> userCountPerMonth=users.stream()
-                .filter(user-> user.getDateRegistered().isAfter(LocalDate.now().minusMonths(6)))
+        // Creating a map that counts the number of new registered members in each month of the past six months
+        Map<YearMonth, Long> userCountPerMonth = users.stream()
+                .filter(user -> user.getDateRegistered().isAfter(LocalDate.now().minusMonths(6)))
                 .collect(Collectors.groupingBy(
                         user -> YearMonth.from(user.getDateRegistered()),
                         Collectors.counting()
                 ));
-        String usersRegisteredCount = convertToJson(userCountPerMonth);
-        System.out.println(usersRegisteredCount);
+
+        String usersRegisteredCount = convertSixMonthsUserToJson(userCountPerMonth);
         return usersRegisteredCount;
     }
 
-    public String convertToJson(Map <YearMonth, Long> userCountPerMonth) throws JsonProcessingException {
+    public String convertSixMonthsUserToJson(Map<YearMonth, Long> userCountPerMonth) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> jsonListOfRegisteredUsers = userCountPerMonth.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry-> {
+                .map(entry -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("date", entry.getKey().toString());
                     map.put("count", entry.getValue());
                     return map;
                 }).collect(Collectors.toList());
+        //converting list to JSON string format
         return objectMapper.writeValueAsString(jsonListOfRegisteredUsers);
     }
-    public List<User> getAllUsers(){
+
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
 
-    public Integer getUsersAgeCountBetweenMinAgeToMaxYears(List<User> listOfUsers,int minAge , int maxAge) {
+    public Integer getUsersAgeCountBetweenMinAgeToMaxYears(List<User> listOfUsers, int minAge, int maxAge) {
 
 
         Integer userBetweenMinAgeToMaxAgeYears = 0;
@@ -286,8 +288,6 @@ public class UserService implements UserDetailsService {
         }
         return userBetweenMinAgeToMaxAgeYears;
     }
-
-
 
 
 }

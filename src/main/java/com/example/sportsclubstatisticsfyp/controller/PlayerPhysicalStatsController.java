@@ -2,22 +2,16 @@ package com.example.sportsclubstatisticsfyp.controller;
 
 import com.example.sportsclubstatisticsfyp.model.entities.PlayerPhysicalStats;
 import com.example.sportsclubstatisticsfyp.model.entities.User;
-import com.example.sportsclubstatisticsfyp.model.repositories.PlayerPhysicalStatsRepository;
 import com.example.sportsclubstatisticsfyp.service.PlayerPhysicalStatsService;
 import com.example.sportsclubstatisticsfyp.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,13 +25,15 @@ public class PlayerPhysicalStatsController {
     private UserService userService;
 
     @GetMapping("/viewAllPlayerPhysicalStats/{userId}/{teamId}")
-    public String viewPlayerPhysicalStastByUserId(Model model,
+    public String viewPlayerPhysicalStatsByUserId(Model model,
                                                   @PathVariable int userId,
                                                   @PathVariable int teamId) throws JsonProcessingException {
 
 
         List<PlayerPhysicalStats> listOfPlayerPhysicalStats = playerPhysicalStatsService.getPlayerPhysicalStatsById(userId);
+
         model.addAttribute("teamId", teamId);
+
         model.addAttribute("listOfPlayerPhysicalStats", listOfPlayerPhysicalStats);
 
         User player=userService.getUserById(userId);
@@ -47,23 +43,20 @@ public class PlayerPhysicalStatsController {
        List<Map<String, Object>> heightStats= playerPhysicalStats.get("heightStats");
        List<Map<String, Object>> weightStats= playerPhysicalStats.get("weightStats");
        List<Map<String,Object>> bmiStats= playerPhysicalStats.get("bmiStats");
+       List<Map<String, Object>> bodyFatPercentageStats= playerPhysicalStats.get("bodyFatPercentageStats");
 
        ObjectMapper objectMapper = new ObjectMapper();
-
-        // Register the JavaTimeModule to handle Java 8 date/time types
-        objectMapper.registerModule(new JavaTimeModule());
-        // Disable writing dates as timestamps (so you'll get formatted strings)
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
        String heightStatsJson=objectMapper.writeValueAsString(heightStats);
        String weightStatsJson=objectMapper.writeValueAsString(weightStats);
        String bmiStatsJson=objectMapper.writeValueAsString(bmiStats);
+       String bodyFatPercentageStatsJson=objectMapper.writeValueAsString(bodyFatPercentageStats);
 
        model.addAttribute("heightStats", heightStatsJson);
        model.addAttribute("weightStats", weightStatsJson);
        model.addAttribute("bmiStats", bmiStatsJson);
+        model.addAttribute("bodyFatPercentageStats", bodyFatPercentageStatsJson);
 
-        System.out.println(heightStatsJson);
 
         return "viewPlayerPhysicalStats";
 
@@ -90,7 +83,7 @@ public class PlayerPhysicalStatsController {
         User player = userService.getUserById(playerPhysicalStats.getPlayer().getUserId());
         playerPhysicalStats.setPlayer(player);
         playerPhysicalStatsService.createPlayerPhysicalStats(playerPhysicalStats);
-        redirectAttributes.addFlashAttribute("message", "Player physical stats has been created");
+        redirectAttributes.addFlashAttribute("successMessage", "Player physical stats has been created");
         return "redirect:/playerPhysicalStats/viewAllPlayerPhysicalStats/"
                 +playerPhysicalStats.getPlayer().getUserId()+"/"+teamId;
 

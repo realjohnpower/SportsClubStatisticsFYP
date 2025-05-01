@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +58,7 @@ public class User  implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate dateRegistered;
 
-
+    // Alan Ryan's comments on setting up the relationship between the User and Role entities
     /*
      Defined a many-to-many relationship between the User
      entity and the Role entity, specifying that each club member could have
@@ -67,17 +67,17 @@ public class User  implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"), //The foreign key column in the join table (user_roles) that refers to the Customer entity.
+            joinColumns = @JoinColumn(name = "user_id"), //The foreign key column in the join table (user_roles) that refers to the User entity.
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     //The foreign key column in the join table that refers to the Role entity.
 //I'm using a Set here so that roles are unique
 //This prevents duplicate entries for the same role on a user.
     private Set<Role> roles = new HashSet();
 
-    //list of teams for a club member with a 'PLAYER' role
+    // List of teams for a users with a 'PLAYER' role. These users are players in the sport club
     @ManyToMany(mappedBy = "teamMembers")
     private Set<Team> listOfTeams = new HashSet();
-    //list of teams for club member with a 'TRAINER' role
+    //list of teams for club member with a 'TRAINER' role. These users are trainers in the sport club.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainer")
     @ToString.Exclude
     private Set<Team> trainersListOfTeams;
@@ -195,6 +195,7 @@ public class User  implements Serializable {
     }
 
     public static String getLoggedInEmail(){
+        // Alan Ryan's code for getting a User entity from the email for a current logged in user
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String usersEmail= ((UserDetails)principal).getUsername();
 

@@ -13,7 +13,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+// This is Alan Ryan's code that he provided me with for setting up Spring Security
+// "filterChain" method allows you to apply permissions to controller endpoints
+// to users on the application depending on their role types.
+// "authenticationManager" method authenticates the user when they try to log in
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {

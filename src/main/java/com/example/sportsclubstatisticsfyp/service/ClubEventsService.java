@@ -1,27 +1,20 @@
 package com.example.sportsclubstatisticsfyp.service;
 
-import com.example.sportsclubstatisticsfyp.controller.ClubEventsController;
-import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterMemberDTOForm;
+
 import com.example.sportsclubstatisticsfyp.model.entities.ClubEventAttendance;
 import com.example.sportsclubstatisticsfyp.model.entities.ClubEvents;
-import com.example.sportsclubstatisticsfyp.model.entities.Role;
+
 import com.example.sportsclubstatisticsfyp.model.entities.User;
-import com.example.sportsclubstatisticsfyp.model.repositories.ClubEventAttendanceRepository;
-import com.example.sportsclubstatisticsfyp.model.repositories.ClubEventsRepository;
-import com.example.sportsclubstatisticsfyp.model.repositories.UserRepository;
+import com.example.sportsclubstatisticsfyp.repositories.ClubEventAttendanceRepository;
+import com.example.sportsclubstatisticsfyp.repositories.ClubEventsRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +95,7 @@ public class ClubEventsService {
             for (ClubEventAttendance clubEventAttendance : listOfClubEventAttendances) {
                 Integer clubAttendanceClubMemberId = clubEventAttendance.getClubMember().getUserId();
                 Integer clubAttendanceClubEventId = clubEventAttendance.getClubEvent().getClubEventId();
+                // Updating users attendance if they have already recorded their attendance.
                 if (user.getUserId() == clubAttendanceClubMemberId && clubEvent.getClubEventId() == clubAttendanceClubEventId) {
                     clubEvent.getAttendanceList().remove(clubEventAttendance);
                     Optional<ClubEventAttendance> optionalAttendance = clubEventAttendanceRepository.findById(clubEventAttendance.getClubEventAttendanceId());

@@ -9,17 +9,19 @@ var height;
 var xAxis;
 var yAxis;
 var yAxisTitle;
+var chartTitle;
 
 function drawTeamStatisticsChart(data,yAxisLabel) {
     data=JSON.parse(data);
 
 
-    margin = {top: 30, right: 30, bottom: 70, left: 60},
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+    // Setting the dimensions of the graph
+    margin = {top: 150, right: 30, bottom: 70, left: 60},
+        width = 1000 - margin.left - margin.right,
+        height = 600 - margin.top - margin.bottom;
 
 
-// append the svg object to the body of the page
+// Appending svg element to the #team-event-stats-barchart div
      svg = d3.select("#team-event-stats-barchart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -28,20 +30,40 @@ function drawTeamStatisticsChart(data,yAxisLabel) {
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-// Initialize the X axis
+// Creating x-axis scales for the bar graph
       x = d3.scaleBand()
         .range([ 0, width ])
         .padding(0.2);
+
      xAxis = svg.append("g")
         .attr("transform", "translate(0," + height + ")")
 
 
-// Initialize the Y axis
+// Creating the Y axis for the bar graph
      y = d3.scaleLinear()
-        .range([ height, 0]);
-     yAxis = svg.append("g")
-        .attr("class", "myYaxis")
+        .range([ height, 0])
 
+    yAxis = svg.append("g")
+
+    // Adding the chart title to the bar graph
+    chartTitle =svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .style("font-family","sans-serif")
+        .text("Top Players By "+yAxisLabel+" In This Session.");
+
+    // Adding X-axis label to the bar graph
+    xAxisLabel = svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .style("font-family","sans-serif")
+        .text("Players");
+    // Adding Y-axis label to the Bar Graph
     yAxisTitle = svg.append("text")
         .attr("class", "y-axis-title")
         .attr("transform", "rotate(-90)")
@@ -49,37 +71,46 @@ function drawTeamStatisticsChart(data,yAxisLabel) {
         .attr("y", -50)
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
-        .text(yAxisLabel); // Set initial label dynamically
-    updateTeamEventStatsChart(data);
+        .style("font-family","sans-serif")
+
+    updateTeamEventStatsChart(data, "Max BPM Value");
 }
 function updateTeamEventStatsChart(data, yAxisLabel){
+    const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
 
-    // X axis
+    // Updating the X axis on the bar graph
     x.domain(data.map(function(d) { return d.name; }))
     xAxis.transition().duration(1000).call(d3.axisBottom(x))
 
-    // Add Y axis
+    // Updating the  Y axis on the bar graph
     y.domain([0, d3.max(data, function(d) { return d.value }) ]);
     yAxis.transition().duration(1000).call(d3.axisLeft(y));
 
-    // variable u: map data to existing bars
-    var u = svg.selectAll("rect")
+    // Drawing bars on the graph according to the data passed in
+    var bars = svg.selectAll("rect")
         .data(data)
 
-    // update bars
-    u
-        .enter()
-        .append("rect")
-        .merge(u)
+
+        bars.join("rect")
+        .on("mouseover", (event, d) => {
+            tooltip.style("opacity", 1)
+                .html(`<strong>Player: ${d.name}</strong><br>Value: ${d.value}`)
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY + 15) + "px");
+        })
+        .on("mouseout", () => tooltip.style("opacity", 0))
         .transition()
         .duration(1000)
         .attr("x", function(d) { return x(d.name); })
         .attr("y", function(d) { return y(d.value); })
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.value); })
-        .attr("fill", "#69b3a2")
+            .attr("fill", "#1f77b4")
 
-
+    //Updating the chart title on the bar graph
+    chartTitle.text("Top Players By "+yAxisLabel+" In This Session.");
+    //Updating Y axis title on the bar graph
     yAxisTitle.text(yAxisLabel)
 
 

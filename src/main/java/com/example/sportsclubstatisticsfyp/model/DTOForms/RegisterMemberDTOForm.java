@@ -1,13 +1,10 @@
 package com.example.sportsclubstatisticsfyp.model.DTOForms;
 
-import com.example.sportsclubstatisticsfyp.model.entities.Role;
-import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashSet;
+
 import java.util.Set;
 
 public class RegisterMemberDTOForm {
@@ -28,15 +25,6 @@ public class RegisterMemberDTOForm {
     private LocalDate dateOfBirth;
 
     private Set<Long> roles;
-
-
-
-
-
-
-
-
-
 
     public void setUserId(Long userId) {
         this.userId = userId;

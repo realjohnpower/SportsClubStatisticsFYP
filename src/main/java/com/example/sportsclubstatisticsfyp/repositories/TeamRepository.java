@@ -1,4 +1,4 @@
-package com.example.sportsclubstatisticsfyp.model.repositories;
+package com.example.sportsclubstatisticsfyp.repositories;
 
 
 import com.example.sportsclubstatisticsfyp.model.entities.ClubEvents;

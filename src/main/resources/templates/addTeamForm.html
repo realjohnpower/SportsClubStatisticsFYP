@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
+<h1>Add A Team</h1>
 <form th:action="@{/teams/addTeam}" th:object="${newTeamForm}" method="post">
 
     <div>
@@ -11,9 +12,6 @@
         <input type="text" id="teamName" name="teamName"  th:field="*{teamName}" />
 
     </div>
-
-
-
 
     <div>
         <label for="trainer">Trainer:</label>
@@ -25,7 +23,7 @@
     </div>
 
     <div>
-        <label for="teamMembers">Team Members:</label>
+        <label for="teamMembers">Team Members: (Hold Ctrl button and select players to add to the team)</label>
         <select id="teamMembers" th:field="*{listOfTeamMembers}" multiple >
             <option th:each="teamMembers:${listOfPlayers}" th:value="${teamMembers.getUserId()}" th:text="${teamMembers.getFirstName()}+' '+${teamMembers.getLastName()}"></option>
 

@@ -1,11 +1,11 @@
 package com.example.sportsclubstatisticsfyp.model.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name="player_physical_stats")

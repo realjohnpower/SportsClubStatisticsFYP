@@ -1,21 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <script th:inline="javascript" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">
 
     window.onload = function() {
-
-
         let jsonString=[[${heightStats}]];
-
-
-        drawPlayerPhysicalStatsLineChart(jsonString);
-
-
-
-
+        drawPlayerPhysicalStatsLineChart(jsonString, 'Height Value', [[${player.getFirstName()}]]+' '+[[${player.getLastName()}]]+'\'s');
 
     };
 </script>
@@ -28,9 +20,9 @@
 </div>
 
 
-<h2     th:if="${listOfPlayerPhysicalStats.isEmpty()}">
-        No Player Physical Stats Have Been Recorded Yet
-</h2>
+<h2     th:if="${listOfPlayerPhysicalStats.isEmpty()}"> No Player Physical Stats Have Been Recorded Yet </h2>
+
+
 
 
 
@@ -39,26 +31,16 @@
 <thead>
     <tr>
 
-
-
         <th>Height (Metres)</th>
         <th>Weight (Kg)</th>
         <th>Body Fat %</th>
         <th>Body Mass Index (BMI)</th>
-
 
     </tr>
 
 </thead>
 
     <tr th:each="playerPhysicalStats: ${listOfPlayerPhysicalStats}">
-
-
-
-
-
-
-
 
         <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getHeightM(), 2, 2)}"></td>
 
@@ -68,11 +50,6 @@
 
         <td th:text="${#numbers.formatDecimal(playerPhysicalStats.getBmi(), 2, 2)}"></td>
 
-
-
-
-
-
     </tr>
 
 
@@ -80,12 +57,19 @@
 </div>
 
 
+<div class="centerButton">
+<a th:href="'/teams/teamDrillDown/'+${teamId}">
+     <button>Back To Team Details</button>
+</a>
+</div>
 
-<a th:href="'/teams/teamDrillDown/'+${teamId}">Back To Team Details </a>
+
+
 <div class="graph-button-container">
-<button class="graph-button" th:onclick="updateChartData([[${heightStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Height</button>
-<button class="graph-button" th:onclick="updateChartData([[${bmiStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">BMI</button>
-<button class="graph-button" th:onclick="updateChartData([[${weightStats}]])" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Weight</button>
+<button class="graph-button" th:onclick="updateChartData([[${heightStats}]], 'Height (Metres)',[[${player.getFirstName()}]]+' '+[[${player.getLastName()}]]+'\'s')" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Height</button>
+<button class="graph-button" th:onclick="updateChartData([[${bmiStats}]], 'BMI Value',[[${player.getFirstName()}]]+' '+[[${player.getLastName()}]]+'\'s')" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">BMI</button>
+<button class="graph-button" th:onclick="updateChartData([[${weightStats}]], 'Weight (Kg)',[[${player.getFirstName()}]]+' '+[[${player.getLastName()}]]+'\'s')" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Weight</button>
+    <button class="graph-button" th:onclick="updateChartData([[${bodyFatPercentageStats}]], 'Body Fat %', [[${player.getFirstName()}]]+' '+[[${player.getLastName()}]]+'\'s')" th:if="!${listOfPlayerPhysicalStats.isEmpty()}">Body Fat Percentage</button>
 </div>
 
 <div id = "physical-stats-line-chart"></div>

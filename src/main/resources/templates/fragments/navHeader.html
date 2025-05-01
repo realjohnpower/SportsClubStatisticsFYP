@@ -10,14 +10,14 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://d3js.org/d3.v4.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="/assets/javascript/eventAttendanceBarChart.js"></script>
-        <script src="/assets/javascript/genderPieChart.js"></script>
+        <script src="/assets/javascript/genderBarChart.js"></script>
         <script src="/assets/javascript/genderAgeGroupBarChart.js"></script>
         <script src="/assets/javascript/sixMonthUserRegisteredLineChart.js"></script>
         <script src="/assets/javascript/playerPhysicalStatsLineChart.js"></script>
         <script src="/assets/javascript/teamEventStatisticsBarChart.js"></script>
+        <script src="/assets/javascript/script.js"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="/assets/css/style.css">
 
@@ -26,7 +26,7 @@
 </head>
 
 <body>
-    <nav class= "navbar navbar-inverse">
+    <nav class= "navbar navbar-inverse navbar-fixed-top" >
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" th:href="@{'/'}">Sport Club</a>
@@ -37,9 +37,6 @@
                 <li sec:authorize="isAnonymous()"><a th:href="@{'/login'}">Log In </a></li>
 
                 <li sec:authorize="isAuthenticated()"><a th:href="@{'/clubEvents/viewClubEvents'}">Club Events</a></li>
-
-
-
 
 
                 <li sec:authorize="hasRole('ADMIN')">
@@ -55,10 +52,8 @@
                 </li>
 
 
-
-
                 <li sec:authorize="hasAnyRole( 'PLAYER','TRAINER')">
-                    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">Team Events </a>
+                    <a th:href="@{'/teamEvents/viewUsersTeamEvents'}">Team Sessions </a>
                 </li>
 
 

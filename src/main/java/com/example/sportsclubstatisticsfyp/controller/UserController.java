@@ -3,17 +3,13 @@ package com.example.sportsclubstatisticsfyp.controller;
 import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterMemberDTOForm;
 import com.example.sportsclubstatisticsfyp.model.entities.User;
 import com.example.sportsclubstatisticsfyp.model.entities.Role;
-import com.example.sportsclubstatisticsfyp.model.repositories.UserRepository;
 import com.example.sportsclubstatisticsfyp.service.RoleService;
 import com.example.sportsclubstatisticsfyp.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.awt.*;
 import java.text.ParseException;
 import java.util.*;
 import java.util.List;
@@ -49,16 +44,12 @@ public class UserController {
     }
 
     @PostMapping("/registerMember")
-    public ModelAndView addClubMember(@Valid @ModelAttribute("newMemberForm") RegisterMemberDTOForm clubMember,
+    public ModelAndView addClubMember(@ModelAttribute("newMemberForm") RegisterMemberDTOForm clubMember,
                                       RedirectAttributes redirectAttributes ) throws ParseException {
-
 
         userService.createUser(clubMember);
 
-
-
-
-            redirectAttributes.addFlashAttribute("message", "Club member account has been created");
+        redirectAttributes.addFlashAttribute("successMessage", "New Member has been successfully registered");
             return new ModelAndView("redirect:/");
 
         }
@@ -68,6 +59,8 @@ public class UserController {
     public ModelAndView getClubMemberStats(Model model) throws JsonProcessingException {
     Map<String, Integer> maleClubMembers= userService.getAllMaleClubMembersByUserType();
     Map<String, Integer> femaleClubMembers=userService.getAllFemaleClubMembersByUserType();
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     Integer allMaleUsers = maleClubMembers.get("allUsersCount");
     Integer allMaleAdmin = maleClubMembers.get("adminsCount");
@@ -80,20 +73,42 @@ public class UserController {
     Integer allFemaleTrainers = femaleClubMembers.get("trainersCount");
     Integer allFemalePlayers = femaleClubMembers.get("playersCount");
     Integer allFemaleClubMembers = femaleClubMembers.get("clubMemberCount");
-    model.addAttribute("allMaleUsersCount",allMaleUsers);
-    model.addAttribute("allMaleAdminsCount",allMaleAdmin);
-    model.addAttribute("allMaleTrainersCount",allMaleTrainers);
-    model.addAttribute("allMalePlayersCount",allMalePlayers);
-    model.addAttribute("allMaleClubMembersCount",allMaleClubMembers);
+    List<Map<String, Object>> allClubUsersGenderCount = new ArrayList<>();
+    List<Map<String, Object>> clubMemberGenderCount = new ArrayList<>();
+    List<Map<String, Object>> clubPlayerGenderCount = new ArrayList<>();
+    List<Map<String, Object>> clubTrainerGenderCount = new ArrayList<>();
+    List<Map<String, Object>> clubAdminGenderCount = new ArrayList<>();
+    allClubUsersGenderCount.add(Map.of("gender","Male","value", allMaleUsers));
+    allClubUsersGenderCount.add(Map.of("gender","Female","value", allFemaleUsers));
 
-    model.addAttribute("allFemaleUsersCount",allFemaleUsers);
-    model.addAttribute("allFemaleTrainersCount",allFemaleTrainers);
-    model.addAttribute("allFemalePlayersCount",allFemalePlayers);
-    model.addAttribute("allFemaleAdminCount",allFemaleAdmin);
-    model.addAttribute("allFemaleClubMembersCount",allFemaleClubMembers);
+        clubMemberGenderCount.add(Map.of("gender","Male","value", allMaleClubMembers));
+        clubMemberGenderCount.add(Map.of("gender","Female","value", allFemaleClubMembers));
+        clubPlayerGenderCount.add(Map.of("gender","Male","value", allMalePlayers));
+        clubPlayerGenderCount.add(Map.of("gender","Female","value", allFemalePlayers));
+        clubTrainerGenderCount.add(Map.of("gender","Male","value", allMaleTrainers));
+        clubTrainerGenderCount.add(Map.of("gender","Female","value", allFemaleTrainers));
+
+        clubAdminGenderCount.add(Map.of("gender","Male","value", allMaleAdmin));
+        clubAdminGenderCount.add(Map.of("gender","Female","value", allFemaleAdmin));
+        String totalClubAdmins = objectMapper.writeValueAsString(clubAdminGenderCount);
+
+        String totalClubUsers = objectMapper.writeValueAsString(allClubUsersGenderCount);
+        String totalClubMembers = objectMapper.writeValueAsString(clubMemberGenderCount);
+        String totalClubPlayers = objectMapper.writeValueAsString(clubPlayerGenderCount);
+        String totalClubTrainer = objectMapper.writeValueAsString(clubTrainerGenderCount);
+
+        model.addAttribute("totalClubUsers", totalClubUsers);
+        model.addAttribute("totalClubMembers",totalClubMembers);
+        model.addAttribute("totalClubPlayers", totalClubPlayers);
+        model.addAttribute("totalClubTrainer",totalClubTrainer);
+        model.addAttribute("totalClubAdmins",totalClubAdmins);
 
     List<User> listOfFemaleUsers=userService.getAllFemaleUsers();
     List<User> listOfMaleUsers=userService.getAllMaleUsers();
+
+
+
+
     Integer femalesBetween0to24 = userService.getUsersAgeCountBetweenMinAgeToMaxYears(listOfFemaleUsers,0,24);
     Integer femalesBetween25to49 = userService.getUsersAgeCountBetweenMinAgeToMaxYears(listOfFemaleUsers,25,49);
     Integer femalesBetween50to74 = userService.getUsersAgeCountBetweenMinAgeToMaxYears(listOfFemaleUsers,50,74);
@@ -104,37 +119,30 @@ public class UserController {
     Integer malesBetween50to74 = userService.getUsersAgeCountBetweenMinAgeToMaxYears(listOfMaleUsers,50,74);
     Integer malesBetween75to100 = userService.getUsersAgeCountBetweenMinAgeToMaxYears(listOfMaleUsers,75,100);
 
-    model.addAttribute("femalesBetween0to24",femalesBetween0to24);
-    model.addAttribute("femalesBetween25to49",femalesBetween25to49);
-    model.addAttribute("femalesBetween50to74",femalesBetween50to74);
-    model.addAttribute("femalesBetween75to100",femalesBetween75to100);
 
-    model.addAttribute("malesBetween0to24",malesBetween0to24);
-    model.addAttribute("malesBetween25to49",malesBetween25to49);
-    model.addAttribute("malesBetween50to74",malesBetween50to74);
-    model.addAttribute("malesBetween75to100",malesBetween75to100);
-    System.out.println(femalesBetween0to24);
-    System.out.println(femalesBetween25to49);
-    System.out.println(femalesBetween50to74);
-    System.out.println(femalesBetween75to100);
+
+        List<Map<String,Object>> allUsersAgeGroup = new ArrayList<>();
+
+
+        allUsersAgeGroup.add(Map.of("group","0-24", "Female",femalesBetween0to24,"Male", malesBetween0to24));
+        allUsersAgeGroup.add(Map.of("group","25-49", "Female",femalesBetween25to49,"Male", malesBetween25to49));
+        allUsersAgeGroup.add(Map.of("group","50-74", "Female",femalesBetween50to74,"Male", malesBetween50to74));
+        allUsersAgeGroup.add(Map.of("group","75-100", "Female",femalesBetween75to100,"Male", malesBetween75to100));
+
+
+
+        String totalClubUsersAgeGroup = objectMapper.writeValueAsString(allUsersAgeGroup);
+
+
+        model.addAttribute("totalClubUsersAgeGroup", totalClubUsersAgeGroup);
+
 
 
     String listOfNewUsersPast6monthsJson = userService.getSixMonthsUserRegisterationStatus();
-    System.out.println(listOfNewUsersPast6monthsJson);
+
     model.addAttribute("listOfNewUsersPast6monthsJson", listOfNewUsersPast6monthsJson);
 
-    /*
-    Integer zeroTo24Years = userService.getUsersAgeCountBetweenMinAgeToMaxYears(0,24);
-    Integer twentyFiveTo49Years = userService.getUsersAgeCountBetweenMinAgeToMaxYears(25,49);
-    Integer fiftyTo74years = userService.getUsersAgeCountBetweenMinAgeToMaxYears(50,74);
-    Integer seventyFiveTo100years = userService.getUsersAgeCountBetweenMinAgeToMaxYears(75,100);
 
-    model.addAttribute("zeroTo24Years",zeroTo24Years);
-    model.addAttribute("twentyFiveTo49Years",twentyFiveTo49Years);
-    model.addAttribute("fiftyTo74Years",fiftyTo74years);
-    model.addAttribute("seventyFiveTo100Years",seventyFiveTo100years);
-
-     */
     return new ModelAndView("clubMemberStats");
     }
 }

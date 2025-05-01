@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "team_events")
@@ -24,8 +24,8 @@ public class TeamEvent implements Serializable {
 
         @Basic(optional = false)
         @Column(name = "event_name")
-
         private String eventName;
+
 
         @Basic(optional = false)
         @Column(name = "event_description")

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
 
 
-    <h2>Add Team Session Stats</h2>
+    <h1>Add Team Session Statistics</h1>
 
     <div class="centerButton">
         <a th:href="@{'/teamEvents/getCsvUploadForm/'+${teamEvent.getTeamEventId()}}">
@@ -33,17 +33,9 @@
 
 
             <tr th:each="teamSessionStats, itemStat: *{teamSessionStats}">
-
-
-
                 <td th:text="${teamSessionStats.getPlayer().getFirstName()+' '+ teamSessionStats.getPlayer().getLastName()}"></td>
 
-
-
-
-
                 <td>
-
                     <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].restingBpm}"/>
                 </td>
 
@@ -53,16 +45,12 @@
                 </td>
 
                 <td>
-
                     <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].maxBpm}"/>
                 </td>
 
                 <td>
-
                     <input type="number"  th:field="*{teamSessionStats[__${itemStat.index}__].caloriesBurned}"/>
                 </td>
-
-
 
                 <td>
                     <input type="hidden"  th:value="${teamSessionStats.getTeamSession().getTeamEventId()}" th:name="|teamSessionStats[${itemStat.index}].teamSession.teamEventId|"/>

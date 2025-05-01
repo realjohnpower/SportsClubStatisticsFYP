@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 <body>
+
+<h1>Register A Club Member</h1>
+
 <form th:action="@{/user/registerMember}" th:object="${newMemberForm}" method="post">
 
     <div>

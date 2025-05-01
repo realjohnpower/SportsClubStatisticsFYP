@@ -1,14 +1,8 @@
 package com.example.sportsclubstatisticsfyp.controller;
 
 import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamDTOForm;
-import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamEventDTOForm;
-import com.example.sportsclubstatisticsfyp.model.entities.ClubEvents;
-import com.example.sportsclubstatisticsfyp.model.entities.Team;
-import com.example.sportsclubstatisticsfyp.model.entities.TeamEvent;
-import com.example.sportsclubstatisticsfyp.model.entities.User;
-import com.example.sportsclubstatisticsfyp.model.repositories.TeamRepository;
-import com.example.sportsclubstatisticsfyp.model.repositories.UserRepository;
-import com.example.sportsclubstatisticsfyp.service.ClubEventsService;
+import com.example.sportsclubstatisticsfyp.model.entities.*;
+import com.example.sportsclubstatisticsfyp.service.TeamEventService;
 import com.example.sportsclubstatisticsfyp.service.TeamService;
 import com.example.sportsclubstatisticsfyp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +23,7 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private UserService userService;
+
 
 
     @GetMapping("/addTeamForm")
@@ -126,8 +119,18 @@ public class TeamController {
 
         teamService.createTeam(newTeam);
         redirectAttributes.addFlashAttribute("successMessage", "Team has been created");
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/teams/viewTeams");
 
+    }
+
+    @GetMapping("/removeTeam/{id}")
+    public String removeTeam(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+
+        Team team = teamService.getTeamById(id);
+        teamService.removeTeam(team);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Team has been removed");
+        return "redirect:/teams/viewTeams";
     }
 
     @RequestMapping("/addTeamMember/{teamId}/{userId}")

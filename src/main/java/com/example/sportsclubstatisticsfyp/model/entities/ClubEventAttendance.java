@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 @Entity
 @Table(name = "club_event_attendance")
 public class ClubEventAttendance implements Serializable {

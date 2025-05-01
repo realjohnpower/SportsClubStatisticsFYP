@@ -7,15 +7,22 @@ var margin,
     line,
     xAxisGroup,
     yAxisGroup,
-    chartBody,
     path,
-    circlesGroup
+    circlesGroup,
+    yAxisLabel,
+    xAxisLabel,
+    chartTitle;
+
+const lineGraphTooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
 
 
-function drawPlayerPhysicalStatsLineChart(stringData) {
+
+function drawPlayerPhysicalStatsLineChart(stringData, yAxisText, playerName ) {
+    //Parsing the data to JSON format
     data = JSON.parse(stringData, (key, value) => {
         if (key === "date") {
-            return new Date(value);  // Using trim() to be safe
+            return new Date(value);
         }
         return value;
     });
@@ -23,8 +30,7 @@ function drawPlayerPhysicalStatsLineChart(stringData) {
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-
-// Append an SVG element to the #chart div
+// Appending an SVG element to the physical-stats-line-chart div
          svg = d3.select("#physical-stats-line-chart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -32,89 +38,115 @@ function drawPlayerPhysicalStatsLineChart(stringData) {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// Define x and y scales
+// Creating the x and y-axis scales for the line graph
         x = d3.scaleTime().range([0, width]);
         y = d3.scaleLinear().range([height, 0]);
 
-// Define the line generator
-        line = d3.line()
-        .x(function(d) { return x(d.date); })
-        .y(function(d) { return y(d.value); })
-        .curve(d3.curveMonotoneX);// Smooth curve
-
-// Create groups for axes
+// Appending groups for x and y axes on the line graph
         xAxisGroup = svg.append("g")
         .attr("transform", `translate(0,${height})`);
         yAxisGroup = svg.append("g");
 
+// Appending a group element for the line on the line graph
+      linePathGroup = svg.append("g")
 
-
-// Group for the line and circles, with clip path applied
-        chartBody = svg.append("g")
-        .attr("clip-path", "url(#clip)");
-
-// Append the path element for the line
-        path = chartBody.append("path")
+// Appending the SVG path element for the line
+        path = linePathGroup.append("g")
+            .append("path")
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 2);
 
-// Group for the circles
-     circlesGroup = chartBody.append("g");
-     updateLineChart(data);
-}
-// Function to update the chart with new data
-function updateLineChart(data) {
-    // Assume data is an array of objects with properties: date (JavaScript Date) and value (number)
+// Creating group for the circles on the line graph
+     circlesGroup = svg.append("g");
 
-    // Update the scales' domains
+    // Adding the x-axis label to the line graph
+    xAxisLabel = svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Date Recorded");
+
+    // Adding the y-axis label to the line graph
+    yAxisLabel = svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+
+// Adding the chart title to the line graph
+   chartTitle= svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -20)
+        .attr("text-anchor", "middle")
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+
+     updateLineChart(data, yAxisText, playerName);
+}
+// Function to draw the line and circles of the line graph according to the data passed in
+function updateLineChart(data, yAxisText, playerName) {
+
+    // Updating the x and y-axis domains on the line graph according to the data passed in
     x.domain(d3.extent(data, d => d.date));
     y.domain([0, d3.max(data, d => d.value)]).nice();
 
     const tickDates = data.map(d => d.date);
-    // Update axes
+
+    const tooltipTimeFormat=d3.timeFormat("%d %b %Y");
+
+    // Updating the X and Y axes on the line graph according to the data passed in
     xAxisGroup.transition().duration(1000)
         .call(d3.axisBottom(x).tickValues(tickDates).tickFormat(d3.timeFormat("%d-%m-%Y")));
     yAxisGroup.transition().duration(1000)
         .call(d3.axisLeft(y));
 
-    // Update the line path
+    // Creating a function that returns an SVG path element which describes the shape of the line
+    line = d3.line()
+        .x((d) => { return x(d.date); })
+        .y((d) => { return y(d.value); })
+    // Updating the line on the line graph according to the line generated based on the data.
     path.datum(data)
         .transition()
         .duration(1000)
         .attr("d", line);
 
-    // Data join for circles
+    // Binding the data to all of the circle elements on the line graph.
     var circles = circlesGroup.selectAll("circle")
         .data(data);
 
-    // Remove any circles that are no longer needed
-    circles.exit().transition().duration(1000)
-        .attr("r", 0)
-        .remove();
-
-    // Update existing circles
-    circles.transition().duration(1000)
-        .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.value); })
-        .attr("r", 4);
-
-    // Enter new circles
-    circles.enter().append("circle")
-        .attr("cx", function(d) { return x(d.date); })
-        .attr("cy", function(d) { return y(d.value); })
+    // Updating the circles positions on the line graph according to the data passed in
+    circles.join("circle")
+        .attr("cx", (d)=> { return x(d.date); })
+        .attr("cy", (d)=> { return y(d.value); })
         .attr("r", 0)
         .attr("fill", "red")
-        .transition().duration(1000)
-        .attr("r", 4);
+        .attr("r", 4)
+        .on("mouseover", (event, d) => {
+            lineGraphTooltip.style("opacity", 1)
+                .html(`<strong>Date: </strong>${tooltipTimeFormat(d.date)}<br><strong>Value:</strong> ${d.value}`)
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY + 15) + "px");
+        })
+        .on("mouseout", () => lineGraphTooltip.style("opacity", 0))
+        .transition()
+        .duration(1000)
+    //Updating the chart title and the y-axis label on the line graph.
+    chartTitle.text(playerName+" "+yAxisText+" Trends Over Time");
+    yAxisLabel.text(yAxisText);
+
 }
-function updateChartData(data){
+function updateChartData(data, yAxisText, playerName){
+   //Parsing the new data into JSON format
     let jsonString= data;
     var parsedData = JSON.parse(jsonString, (key, value) => {
         if (key === "date") {
-            return new Date(value);  // Using trim() to be safe
+            return new Date(value);
         }
         return value;
     });
-    updateLineChart(parsedData);
+    //Updating the line graph with the new data.
+    updateLineChart(parsedData, yAxisText, playerName);
 }

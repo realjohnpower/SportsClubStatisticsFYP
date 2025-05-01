@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <div th:insert="~{fragments/navHeader :: navigation-header}">
 
 </div>
 
 <body>
+<h1>Edit Team Session </h1>
 <form th:action="@{/teamEvents/editTeamEvent}" th:object="${editTeamEventForm}" method="post">
 
   <div>
@@ -54,21 +55,9 @@
 
 
   <div class="formButtons">
-    <button type="submit">Update Team Event</button>
+    <button type="submit">Update Team Session</button>
   </div>
 </form>
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>

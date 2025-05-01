@@ -1,24 +1,27 @@
 package com.example.sportsclubstatisticsfyp.service;
 
-import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamDTOForm;
+
 import com.example.sportsclubstatisticsfyp.model.DTOForms.RegisterTeamEventDTOForm;
 import com.example.sportsclubstatisticsfyp.model.DTOForms.TeamSessionStatsDTO;
 import com.example.sportsclubstatisticsfyp.model.entities.*;
-import com.example.sportsclubstatisticsfyp.model.repositories.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.example.sportsclubstatisticsfyp.repositories.TeamEventAttendanceRepository;
+import com.example.sportsclubstatisticsfyp.repositories.TeamEventRepository;
+import com.example.sportsclubstatisticsfyp.repositories.TeamRepository;
+import com.example.sportsclubstatisticsfyp.repositories.UserRepository;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -35,10 +38,7 @@ public class TeamEventService {
     private TeamEventAttendanceRepository teamEventAttendanceRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private TeamSessionStatsRepository teamSessionStatsRepository;
-    @Autowired
-    private UserService userService;
+
 
 
     public TeamEvent getTeamEventById(int id){
@@ -65,6 +65,7 @@ public class TeamEventService {
                                          .orElse(null);
         teamEvent.setTeam(teamForEvent);
 
+        teamForEvent.getListOfTeamEvents().add(teamEvent);
 
         return teamEventRepository.save(teamEvent);
     }
@@ -148,6 +149,7 @@ public class TeamEventService {
     }
 
     public Integer getAttendingRecordCount(TeamEvent teamEvent, boolean attending){
+        //boolean value attending is passed in, true means they are attending, false means they are not attending.
         Integer attendingCount = 0;
 
         for(TeamEventAttendance attendance: teamEvent.getAttendanceList()){
@@ -189,6 +191,7 @@ public class TeamEventService {
         for(TeamSessionStats teamSessionStats: teamSessionStatsList){
             User player = userRepository.findById(teamSessionStats.getPlayer().getUserId()).orElse(null);
             teamSessionStats.setPlayer(player);
+
             teamEvent = teamEventRepository.findById(teamSessionStats.getTeamSession().getTeamEventId()).orElse(null);
             teamSessionStats.setTeamSession(teamEvent);
             System.out.println(teamSessionStats);
@@ -202,9 +205,9 @@ public class TeamEventService {
 
 
     }
-    public void createTeamSessionStatsForTeamSessionFromCsvFile (TeamEvent teamEvent, MultipartFile csvFile){
+    public void createTeamSessionStatsForTeamSessionFromCsvFile (TeamEvent teamEvent, MultipartFile csvFile) throws IOException {
 
-       try{
+
            BufferedReader reader = new BufferedReader(new InputStreamReader(csvFile.getInputStream()));
 
            CSVParser  csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
@@ -230,9 +233,7 @@ public class TeamEventService {
            }
            teamEvent.setListOfPlayerSessionsStats(sessionStats);
            teamEventRepository.save(teamEvent);
-       }catch (Exception e){
-           throw new RuntimeException("Error in Processing file");
-        }
+
 
     }
 
@@ -243,7 +244,7 @@ public class TeamEventService {
             case "highestBPM":
                 List<TeamSessionStats> top10HighestBMIlist = teamSessionStats.stream()
                         .sorted(Comparator.comparing(TeamSessionStats::getMaxBpm).reversed())
-                        .limit(2)
+                        .limit(10)
                         .collect(Collectors.toList());
 
                 for (TeamSessionStats stats : top10HighestBMIlist) {
@@ -258,7 +259,7 @@ public class TeamEventService {
             case "averageBPM":
                 List<TeamSessionStats> top10HighestAverageBPMlist = teamSessionStats.stream()
                         .sorted(Comparator.comparing(TeamSessionStats::getAverageBpm).reversed())
-                        .limit(2)
+                        .limit(10)
                         .collect(Collectors.toList());
 
                 for (TeamSessionStats stats : top10HighestAverageBPMlist) {
@@ -274,7 +275,7 @@ public class TeamEventService {
             case "restingBPM":
                 List<TeamSessionStats> top10HighestRestingBPMlist = teamSessionStats.stream()
                         .sorted(Comparator.comparing(TeamSessionStats::getRestingBpm).reversed())
-                        .limit(2)
+                        .limit(10)
                         .collect(Collectors.toList());
 
                 for (TeamSessionStats stats : top10HighestRestingBPMlist) {
@@ -288,9 +289,10 @@ public class TeamEventService {
                 }
                 break;
             case "caloriesBurned":
+                //creating a list of the top ten players with the highest calories burned in a team session.
                 List<TeamSessionStats> top10HighestCaloriesBurnedlist = teamSessionStats.stream()
                         .sorted(Comparator.comparing(TeamSessionStats::getCaloriesBurned).reversed())
-                        .limit(2)
+                        .limit(10)
                         .collect(Collectors.toList());
 
                 for (TeamSessionStats stats : top10HighestCaloriesBurnedlist) {
@@ -305,48 +307,90 @@ public class TeamEventService {
                 break;
 
 
+
         }
         return statListMap;
 
     }
-public byte[] generateTeamSessionStatsPDF(TeamEvent teamEvent) throws FileNotFoundException {
-        String fileName = teamEvent.getTeamEventId()+".pdf";
+public ByteArrayOutputStream generateTeamSessionStatsPDF(TeamEvent teamEvent) throws FileNotFoundException {
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    PdfWriter pdfWriter= new PdfWriter(outputStream);
+    PdfWriter pdfWriter = new PdfWriter(outputStream);
     PdfDocument pdf = new PdfDocument(pdfWriter);
     Document document = new Document(pdf);
+    Paragraph header = new Paragraph(teamEvent.getEventName())
+            .setTextAlignment(TextAlignment.CENTER)
+            .setFontSize(20);
 
-    document.add(new Paragraph(teamEvent.getEventName()));
-
+    document.add(header);
+    //Creating a table that will contain the stats of all players in a training session.
     float [] pointColumnWidths = {150F, 150F, 150F,150F,150F,150F};
     Table table = new Table(pointColumnWidths);
-    table.addCell(new Cell().add(new Paragraph("Player ID")));
-    table.addCell(new Cell().add(new Paragraph("Player Name")));
-    table.addCell(new Cell().add(new Paragraph("Resting BPM")));
-    table.addCell(new Cell().add(new Paragraph("Average BPM")));
-    table.addCell(new Cell().add(new Paragraph("Max BPM")));
-    table.addCell(new Cell().add(new Paragraph("Calories Burned")));
+
+    table.addCell("Player ID");
+    table.addCell("Player Name");
+    table.addCell("Resting BPM");
+    table.addCell("Average BPM");
+    table.addCell("Max BPM");
+    table.addCell("Calories Burned");
     for(TeamSessionStats sessionStats : teamEvent.getListOfPlayerSessionsStats()){
         String fullName = sessionStats.getPlayer().getFirstName() + " " + sessionStats.getPlayer().getLastName();
-        table.addCell(new Cell().add(new Paragraph(sessionStats.getPlayer().getUserId().toString())));
-        table.addCell(new Cell().add(new Paragraph(fullName)));
-        table.addCell(new Cell().add(new Paragraph(sessionStats.getRestingBpm().toString())));
-        table.addCell(new Cell().add(new Paragraph(sessionStats.getAverageBpm().toString())));
-        table.addCell(new Cell().add(new Paragraph(sessionStats.getMaxBpm().toString())));
-        table.addCell(new Cell().add(new Paragraph(sessionStats.getCaloriesBurned().toString())));
+        table.addCell(sessionStats.getPlayer().getUserId().toString());
+        table.addCell(fullName);
+        table.addCell(sessionStats.getRestingBpm().toString());
+        table.addCell(sessionStats.getAverageBpm().toString());
+        table.addCell(sessionStats.getMaxBpm().toString());
+        table.addCell(sessionStats.getCaloriesBurned().toString());
     }
     document.add(table);
     document.close();
+return outputStream;
+}
 
-    // Save the PDF to a file
-    try (FileOutputStream fos = new FileOutputStream(fileName)) {
-        fos.write(outputStream.toByteArray());
-    } catch (IOException e) {
-        throw new RuntimeException(e);
-    }
+public List<Map<String,Double>> generateSessionStatsAverage(TeamEvent teamEvent){
 
-    return outputStream.toByteArray();
+        List <TeamSessionStats> sessionStats = teamEvent.getListOfPlayerSessionsStats();
+        List<Map<String, Double>> sessionStatsAverageList = new ArrayList<>();
+        if(!teamEvent.getListOfPlayerSessionsStats().isEmpty()) {
+
+            Map<String, Double> maxBpmAverageMap = new HashMap<>();
+            Map<String, Double> restingBpmAverageMap = new HashMap<>();
+            Map<String, Double> averageBpmAverageMap = new HashMap<>();
+            Map<String, Double> caloriesBurnedAverageMap = new HashMap<>();
+
+
+            Integer numberOfPlayerSessionStats = sessionStats.size();
+            double maxBpmAverage = 0.0;
+            double restingBpmAverage = 0.0;
+            double averageBpmAverage = 0.0;
+            double caloriesBurnedAverage = 0.0;
+
+            double maxBpmSum = 0.0;
+            double restingBpmSum = 0.0;
+            double averageBpmSum = 0.0;
+            double caloriesBurnedSum = 0.0;
+
+            for (TeamSessionStats stat : teamEvent.getListOfPlayerSessionsStats()) {
+                maxBpmSum += stat.getMaxBpm();
+                restingBpmSum += stat.getRestingBpm();
+                averageBpmSum += stat.getAverageBpm();
+                caloriesBurnedSum += stat.getCaloriesBurned();
+            }
+            maxBpmAverage = maxBpmSum / numberOfPlayerSessionStats;
+            restingBpmAverage = restingBpmSum / numberOfPlayerSessionStats;
+            averageBpmAverage = averageBpmSum / numberOfPlayerSessionStats;
+            caloriesBurnedAverage = caloriesBurnedSum / numberOfPlayerSessionStats;
+
+            maxBpmAverageMap = Map.of("maxBpmAverage", maxBpmAverage);
+            restingBpmAverageMap = Map.of("restingBpmAverage", restingBpmAverage);
+            averageBpmAverageMap = Map.of("averageBpmAverage", averageBpmAverage);
+            caloriesBurnedAverageMap = Map.of("caloriesBurnedAverage", caloriesBurnedAverage);
+            sessionStatsAverageList.add(maxBpmAverageMap);
+            sessionStatsAverageList.add(restingBpmAverageMap);
+            sessionStatsAverageList.add(averageBpmAverageMap);
+            sessionStatsAverageList.add(caloriesBurnedAverageMap);
+        }
+        return sessionStatsAverageList;
 }
 
 
