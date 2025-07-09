@@ -76,8 +76,7 @@ Email: JHarold@gmail.com
 Password: password123
 
 When you open the application on Intellij and press the green play button, the application could fail to build. Just close Intellij and open the project again and press the green button again. The project should now run. There might also be an issue with the java version in which you will be prompted to configure Java version, the application uses version 17. Download the suitable Java version and then close Intellij and open it again.
-Any issues, Feel free to send me an email: K00250447@student.tus.ie
-File Structure:
+
  
  
 
